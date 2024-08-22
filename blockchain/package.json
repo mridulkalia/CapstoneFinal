@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "ethers": "^6.13.2",
+    "hardhat": "^2.22.8",
+    "web3modal": "^1.9.12"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0"
+  }
+}
