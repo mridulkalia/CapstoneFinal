@@ -76,6 +76,12 @@ const useStyles = createStyles((theme) => ({
       },
     },
   },
+  logoutButton: {
+    "&:hover": {
+      backgroundColor: theme.colors.red[6], // Set hover color to red
+      color: theme.white, // Set text color to white for better contrast
+    },
+  },
 
   subLink: {
     width: "100%",
@@ -233,7 +239,7 @@ const LandingNavbar = ({ compressed }: IProps) => {
     }
   };
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.setItem("isAuthenticated", "false");
     window.location.href = "/login";
   };
 
@@ -296,7 +302,7 @@ const LandingNavbar = ({ compressed }: IProps) => {
               >
                 Campaigns
               </Button>
-              <HoverCard
+              {/* <HoverCard
                 width={700}
                 position="bottom"
                 radius="sm"
@@ -332,7 +338,7 @@ const LandingNavbar = ({ compressed }: IProps) => {
                     {links}
                   </SimpleGrid>
                 </HoverCard.Dropdown>
-              </HoverCard>
+              </HoverCard> */}
               <Button
                 component={Link}
                 to="/registerResource"
@@ -349,6 +355,7 @@ const LandingNavbar = ({ compressed }: IProps) => {
               >
                 Start a campaign
               </Button>
+
               {isAdmin && ( // Conditionally render based on isAdmin
                 <Button
                   component={Link}
@@ -360,6 +367,13 @@ const LandingNavbar = ({ compressed }: IProps) => {
                 </Button>
               )}
               {/* Here we will add button */}
+              <Button
+                className={`${classes.link} ${classes.logoutButton}`}
+                onClick={handleLogout}
+                {...buttonProps}
+              >
+                Logout
+              </Button>
             </Flex>
             <Burger
               opened={drawerOpened}
