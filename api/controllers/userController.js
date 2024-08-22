@@ -57,7 +57,6 @@ const login = async (req, res) => {
         .json({ email: adminEmail, profile: "admin", token });
       return;
     }
-
     // Regular user login
     const userCheck = await User.findOne({ email });
     console.log("User found:", userCheck);
@@ -104,36 +103,31 @@ const login = async (req, res) => {
   }
 };
 
-// const profile = (req, res) => {
-//   const { token } = req;
-//   if (token) {
-//     jwt.verify(token, process.env.SECRET, {}, async (err, userData) => {
-//       if (err) throw err;
-//       const { name, email, _id, profile } = await User.findById(userData.id);
-//       res.json(name, email, _id, profile);
-//     });
-//   } else {
-//     res.json(null);
-//   }
-// };
+const getUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.query;
 
+    // Validate the email address
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Respond with user data, excluding sensitive information
+    res.status(200).json({ userId: user._id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error while fetching user' });
+  }
+};
 const logout = (req, res) => {
   res.cookie("token", "").json(true);
 };
 
-// const upload_by_link = async (req, res) => {
-//   const { link } = req.body;
-//   const newName = "photo" + Date.now() + ".jpg";
-//   await imageDownloader.image({
-//     url: link,
-//     dest: "/tmp/" + newName,
-//   });
-//   const url = await uploadToS3(
-//     "/tmp/" + newName,
-//     newName,
-//     mime.lookup("/tmp/" + newName)
-//   );
-//   res.json(url);
-// };
 
-module.exports = { register, login, logout };
+module.exports = { register, login, logout ,getUserByEmail };

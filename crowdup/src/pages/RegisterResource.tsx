@@ -20,10 +20,27 @@ import { showNotification } from "@mantine/notifications";
 import { IconUpload, IconCheck } from "@tabler/icons-react";
 import axios from "axios";
 
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  location: string;
+  resourceType: string;
+  identity: File | null;
+  certificate: File | null;
+  additionalInfo: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
+  experience: string;
+  socialMedia: string;
+  agreeToTerms: boolean;
+}
+
 const RegisterResourcePage = () => {
   const theme = useMantineTheme();
-  //   const [submitted, setSubmitted] = useState(false);
   const [modalOpened, setModalOpened] = useState(false);
+  const [userId, setUserId] = useState(""); // Replace with logic to get user ID
 
   const form = useForm({
     initialValues: {
@@ -38,8 +55,6 @@ const RegisterResourcePage = () => {
       additionalInfo: "",
       emergencyContactName: "",
       emergencyContactPhone: "",
-      availabilityStart: "",
-      availabilityEnd: "",
       experience: "",
       socialMedia: "",
       agreeToTerms: false,
@@ -54,18 +69,63 @@ const RegisterResourcePage = () => {
     },
   });
 
-  const handleSubmit = async (values: any) => {
+  const fetchUserIdByEmail = async (email: string) => {
     try {
-      // Send the form data to the backend API
-      const response = await axios.post("/api/register-resource", values);
+      const response = await axios.get('http://localhost:8000/user-by-email', {
+        params: { email },
+      });
+      return response.data.userId;
+    } catch (error) {
+      console.error('Failed to fetch user ID', error);
+      return null;
+    }
+  };
 
-      if (response.status === 200) {
+  const handleSubmit = async (values: FormValues) => {
+    const email = values.email; // Or wherever you get the email from
+
+    // Fetch user ID based on email
+    const userId = await fetchUserIdByEmail(email);
+  
+    if (!userId) {
+      console.error('User ID is missing');
+      return;
+    }
+    try {
+
+      const formData = new FormData();
+
+      formData.append("userId", userId); // Add user ID dynamically
+      formData.append("firstName", values.firstName);
+      formData.append("lastName", values.lastName);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone);
+      formData.append("location", values.location);
+      formData.append("resourceType", values.resourceType);
+      if (values.identity) formData.append("identity", values.identity);
+      if (values.certificate) formData.append("certificate", values.certificate);
+      formData.append("additionalInfo", values.additionalInfo);
+      formData.append("emergencyContactName", values.emergencyContactName);
+      formData.append("emergencyContactPhone", values.emergencyContactPhone);
+      formData.append("experience", values.experience);
+      formData.append("socialMedia", values.socialMedia);
+      formData.append("agreeToTerms", values.agreeToTerms.toString());
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+      const response = await axios.post("http://localhost:8000/register-resource", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response);
+      if (response.status === 201) {
         showNotification({
           title: "Registration Successful",
-          message:
-            "Your registration is received. We will verify the records and get back to you shortly.",
+          message: "Your registration is received. We will verify the records and get back to you shortly.",
           color: "green",
         });
+        setModalOpened(true);
       } else {
         throw new Error("Failed to submit form");
       }

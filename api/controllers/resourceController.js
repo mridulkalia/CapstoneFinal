@@ -4,11 +4,17 @@ const User = require('../models/userSchema');  // Assuming User model is availab
 // Register Resource Controller
 const registerResource = async (req, res) => {
   try {
-    const { userId } = req.body;  // Assuming you send userId in request
-    const user = await User.findById(userId);
+    const { userId } = req.body;
 
+    // Check if userId is a valid ObjectId
+    if (!userId ) {
+      return res.status(400).send('Invalid user ID');
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).send('User not found');
     }
 
     const resourceData = {
