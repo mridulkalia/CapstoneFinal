@@ -6,8 +6,8 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    {/* <CrowdFundingProvider>/ */}
+    <CrowdFundingProvider>
       <App />
-    {/* </CrowdFundingProvider> */}
+    </CrowdFundingProvider>
   </React.StrictMode>
 );
