@@ -49,7 +49,7 @@ interface IProps extends PaperProps {
     showActions?: boolean
 }
 
-const CampaignCard = ({data, showActions}: IProps) => {
+const  CampaignCard = ({data, showActions}: IProps) => {
     const {classes} = useStyles();
     const {
         mainImage,

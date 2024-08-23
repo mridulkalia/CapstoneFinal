@@ -67,6 +67,7 @@ const SignupPage = () => {
             Login
           </Anchor>
         </Text>
+       
 
         <Paper
           withBorder
@@ -77,6 +78,12 @@ const SignupPage = () => {
           component="form"
           onSubmit={submitHandler}
         >
+           <Text color="dimmed" size="sm" align="center" mt={5}>
+          Are you an NGO/Hospital?{" "}
+          <Anchor size="sm" component={Link} to="/register-ngo-hospital">
+            Register your NGO/Hospital
+          </Anchor>
+        </Text>
           <Group grow mb="md" mt="md">
             <Button
               radius="xl"

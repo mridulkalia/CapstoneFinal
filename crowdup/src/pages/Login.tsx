@@ -52,12 +52,10 @@ const LoginPage = () => {
       );
       console.log("Server response:", response);
 
-      // Check the status and message from the response
       if (response.data.status === false) {
         console.error("Login failed:", response.data.msg || "Unknown error");
       } else {
         localStorage.setItem("role", formData.profile);
-        // Assume `login` is a function to handle additional login tasks
         login(formData.profile);
         navigate("/");
       }
@@ -103,6 +101,12 @@ const LoginPage = () => {
           component="form"
           onSubmit={submitHandler}
         >
+          <Text color="dimmed" size="sm" align="center" mt={5}>
+          Are you an NGO/Hospital?{" "}
+          <Anchor size="sm" component={Link} to="/login-ngo-hospital">
+            Login your NGO/Hospital
+          </Anchor>
+        </Text>
           <Group grow mb="md" mt="md">
             <Button
               radius="xl"

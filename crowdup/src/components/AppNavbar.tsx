@@ -26,7 +26,7 @@ import {
   IconSettings,
   IconStar,
 } from "@tabler/icons-react";
-import { CrowdFundingContext } from "../../../blockchain/context/CrowdFunding";
+// import { CrowdFundingContext } from "../../../blockchain/context/CrowdFunding";
 import { useState, useContext } from "react";
 import { AppLinks, BrandName, SearchDrawer } from "./index";
 
