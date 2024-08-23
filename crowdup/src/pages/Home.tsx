@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { TitleBadge } from "../components";
 import FeaturesSection from "../sections/Home/Features.tsx";
-import StatsSection from "../sections/Home/Stats";
+// import StatsSection from "../sections/Home/Stats";
 import JoinUsSection from "../sections/Home/JoinUs";
 import WaysToFundSection from "../sections/Home/WaysToFund";
 import CampaignsSection from "../sections/Home/Campaigns";
@@ -20,8 +20,8 @@ import { Helmet } from "react-helmet";
 
 const HomePage = (): JSX.Element => {
   const boxProps: BoxProps = {
-    mt: 96,
-    mb: 136,
+    mt: 36,
+    mb: 96,
     py: 48,
   };
 
@@ -36,7 +36,7 @@ const HomePage = (): JSX.Element => {
   const subTitleProps: TextProps = {
     size: 20,
     weight: 700,
-    mb: "md",
+    mb: "xs",
     sx: { lineHeight: "28px" },
   };
 
@@ -58,11 +58,11 @@ const HomePage = (): JSX.Element => {
             </Text>
           </Box>
           <FeaturesSection boxProps={boxProps} subtitleProps={subTitleProps} />
-          <StatsSection
+          {/* <StatsSection
             boxProps={boxProps}
             titleProps={titleProps}
             subtitleProps={subTitleProps}
-          />
+          /> */}
           <JoinUsSection
             boxProps={boxProps}
             titleProps={titleProps}

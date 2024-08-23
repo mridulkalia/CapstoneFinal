@@ -23,6 +23,7 @@ import {
   IconArrowDownRight,
   IconArrowUpRight,
   IconFunction,
+  IconPlus,
   IconReceipt2,
   IconTrophy,
 } from "@tabler/icons-react";
@@ -32,6 +33,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import AdminDashboard from "../components/AdminDashboard";
 import { showNotification } from "@mantine/notifications";
+import { DonatorsTable } from "../components";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -182,11 +184,13 @@ const DashboardPage = () => {
       <Helmet>
         <title>Dashboard</title>
       </Helmet>
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+        Admin Dashboard
+      </h1>
       <AdminDashboard />
       <Box>
         <Container fluid my="xl">
           <Stack spacing="xl">
-            <Title order={3}>Good evening, Jane</Title>
             <SimpleGrid
               cols={4}
               breakpoints={[

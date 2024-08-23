@@ -160,10 +160,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const user = {
-  name: "Jane Spoonfighter",
-  email: "janspoon@fighter.dev",
-  image:
-    "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80",
+  name: "ADMIN",
+  email: "admin@example.com",
+  image: "",
 };
 
 const ICON_SIZE = 18;
@@ -272,12 +271,12 @@ const AppNavbar = ({ ...others }: IProps) => {
                     })}
                   >
                     <Group spacing={7}>
-                      <Avatar
+                      {/* <Avatar
                         src={user.image}
                         alt={user.name}
                         radius="xl"
                         size={matchesMobile ? 18 : 20}
-                      />
+                      /> */}
                       {!matchesMobile && (
                         <>
                           <Text
@@ -295,7 +294,7 @@ const AppNavbar = ({ ...others }: IProps) => {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item
+                  {/* <Menu.Item
                     icon={
                       <IconHeart
                         size="0.9rem"
@@ -327,7 +326,7 @@ const AppNavbar = ({ ...others }: IProps) => {
                     }
                   >
                     Your comments
-                  </Menu.Item>
+                  </Menu.Item> */}
 
                   <Menu.Label>Settings</Menu.Label>
                   <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
