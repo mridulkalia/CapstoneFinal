@@ -23,6 +23,7 @@ import {
   IconArrowDownRight,
   IconArrowUpRight,
   IconFunction,
+  IconPlus,
   IconReceipt2,
   IconTrophy,
 } from "@tabler/icons-react";
@@ -32,6 +33,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import AdminDashboard from "../components/AdminDashboard";
 import { showNotification } from "@mantine/notifications";
+import { DonatorsTable } from "../components";
 
 const useStyles = createStyles((theme) => ({
   root: {

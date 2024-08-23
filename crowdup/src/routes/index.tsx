@@ -18,6 +18,7 @@ import PrivateRoute from "./PrivateRoute";
 import { AuthProvider } from "../context/AuthProvider";
 import RegisterNgoHospitalPage from "../pages/RegisterNgoHospitalPage";
 import LoginNGOHospitalPage from "../pages/LoginNGOHospitalPage";
+import ResourcesPage from "../pages/ResourcesPage";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  
   {
     path: "/dashboard",
     element: (
@@ -100,6 +102,18 @@ const router = createBrowserRouter([
         path: "",
         index: true,
         element: <RegisterResourcePage />,
+      },
+    ],
+  },
+  {
+    path: "/all-resources",
+    element: <PublicLayout />,
+    errorElement: <Error404Page />,
+    children: [
+      {
+        path: "",
+        index: true,
+        element: <ResourcesPage/>,
       },
     ],
   },
