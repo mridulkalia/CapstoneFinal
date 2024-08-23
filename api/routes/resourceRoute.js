@@ -3,6 +3,7 @@ const {
   registerResource,
   getResource,
   updateResourceStatus,
+  sendProposalEmail,
 } = require("../controllers/resourceController");
 const multer = require("multer");
 
@@ -17,5 +18,7 @@ router.post(
 );
 router.put("/resources/:id/status", updateResourceStatus);
 router.get("/resources", getResource);
+router.post("/send-email", sendProposalEmail);
+
 
 module.exports = router;

@@ -27,7 +27,7 @@ import {
   IconStar,
 } from "@tabler/icons-react";
 // import { CrowdFundingContext } from "../../../blockchain/context/CrowdFunding";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AppLinks, BrandName, SearchDrawer } from "./index";
 
 const useStyles = createStyles((theme) => ({
@@ -182,6 +182,7 @@ type IProps = BoxProps;
 const AppNavbar = ({ ...others }: IProps) => {
   const { classes, theme, cx } = useStyles();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [
@@ -202,7 +203,13 @@ const AppNavbar = ({ ...others }: IProps) => {
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
+  const [role, setRole] = useState<string | null>(null);
 
+  // Fetch role from local storage
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    setRole(storedRole);
+  }, []);
   return (
     <Box {...others}>
       <Header height={{ base: 50, md: 70 }} className={classes.header}>

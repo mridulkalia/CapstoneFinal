@@ -206,7 +206,13 @@ const LandingNavbar = ({ compressed }: IProps) => {
   const { classes, theme } = useStyles();
   const [stickyClass, setStickyClass] = useState(false);
   const matchesMobile = useMediaQuery("(max-width: 768px)");
-  const { isAdmin } = useAuth(); // Access isAdmin from context
+  const [role, setRole] = useState<string | null>(null);
+
+  // Fetch role from local storage
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    setRole(storedRole);
+  }, []);
 
   const links = mockdata.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
@@ -238,6 +244,7 @@ const LandingNavbar = ({ compressed }: IProps) => {
       windowHeight > 240 ? setStickyClass(true) : setStickyClass(false);
     }
   };
+
   const handleLogout = () => {
     localStorage.setItem("isAuthenticated", "false");
     window.location.href = "/login";
@@ -302,43 +309,6 @@ const LandingNavbar = ({ compressed }: IProps) => {
               >
                 Campaigns
               </Button>
-              {/* <HoverCard
-                width={700}
-                position="bottom"
-                radius="sm"
-                shadow="md"
-                withinPortal
-              >
-                <HoverCard.Target>
-                  <a href="#" className={classes.link}>
-                    <Center inline>
-                      <Box component="span" mr={5}>
-                        Invest
-                      </Box>
-                      <IconChevronDown size={18} className={classes.linkIcon} />
-                    </Center>
-                  </a>
-                </HoverCard.Target>
-
-                <HoverCard.Dropdown sx={{ overflow: "hidden" }}>
-                  <Group position="apart" px="md">
-                    <Text fw={500} color="dark">
-                      Categories
-                    </Text>
-                    <Button variant="default">See all</Button>
-                  </Group>
-
-                  <Divider
-                    my="sm"
-                    mx="-md"
-                    color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
-                  />
-
-                  <SimpleGrid cols={3} spacing={0}>
-                    {links}
-                  </SimpleGrid>
-                </HoverCard.Dropdown>
-              </HoverCard> */}
               <Button
                 component={Link}
                 to="/registerResource"
@@ -347,26 +317,36 @@ const LandingNavbar = ({ compressed }: IProps) => {
               >
                 Register as Resource
               </Button>
-              <Button
-                component={Link}
-                to="/create-campaign"
-                className={classes.link}
-                {...buttonProps}
-              >
-                Start a campaign
-              </Button>
-
-              {isAdmin && ( // Conditionally render based on isAdmin
-                <Button
-                  component={Link}
-                  to="/dashboard"
-                  className={classes.link}
-                  {...buttonProps}
-                >
-                  My dashboard
-                </Button>
-              )}
-              {/* Here we will add button */}
+              {role === "admin" || role === "ngo_hospital" ? (
+                <>
+                  <Button
+                    component={Link}
+                    to="/create-campaign"
+                    className={classes.link}
+                    {...buttonProps}
+                  >
+                    Start a campaign
+                  </Button>
+                  <Button
+                    component={Link}
+                    to="/all-resources"
+                    className={classes.link}
+                    {...buttonProps}
+                  >
+                    View Resources
+                  </Button>
+                  {role === "admin" && (
+                    <Button
+                      component={Link}
+                      to="/dashboard"
+                      className={classes.link}
+                      {...buttonProps}
+                    >
+                      My dashboard
+                    </Button>
+                  )}
+                </>
+              ) : null}
               <Button
                 className={`${classes.link} ${classes.logoutButton}`}
                 onClick={handleLogout}
@@ -433,24 +413,36 @@ const LandingNavbar = ({ compressed }: IProps) => {
           </UnstyledButton>
           <Collapse in={linksOpened}>{links}</Collapse>
 
-          <Button
-            component={Link}
-            to="/create-campaign"
-            className={classes.link}
-            {...buttonProps}
-          >
-            Start a campaign
-          </Button>
-          {isAdmin && ( // Conditionally render based on isAdmin
-            <Button
-              component={Link}
-              to="/dashboard"
-              className={classes.link}
-              {...buttonProps}
-            >
-              My dashboard
-            </Button>
-          )}
+          {role === "admin" || role === "ngo_hospital" ? (
+            <>
+              <Button
+                component={Link}
+                to="/create-campaign"
+                className={classes.link}
+                {...buttonProps}
+              >
+                Start a campaign
+              </Button>
+              <Button
+                component={Link}
+                to="/all-resources"
+                className={classes.link}
+                {...buttonProps}
+              >
+                View Resources
+              </Button>
+              {role === "admin" && (
+                <Button
+                  component={Link}
+                  to="/dashboard"
+                  className={classes.link}
+                  {...buttonProps}
+                >
+                  My dashboard
+                </Button>
+              )}
+            </>
+          ) : null}
           <Button onClick={handleLogout}>Logout</Button>
           <Button
             leftIcon={<IconSearch size={18} />}
