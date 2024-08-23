@@ -30,6 +30,7 @@ import {
 } from "../components";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import AdminDashboard from "../components/AdminDashboard";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -79,6 +80,7 @@ const DashboardPage = () => {
       <Helmet>
         <title>Dashboard</title>
       </Helmet>
+      <AdminDashboard />
       <Box>
         <Container fluid my="xl">
           <Stack spacing="xl">
@@ -222,13 +224,7 @@ const DashboardPage = () => {
                     <Title {...subTitleProps}>Campaigns</Title>
                     <Text size="sm">Let&apos;s manage your campaigns</Text>
                   </Box>
-                  {/* <Button
-                    leftIcon={<IconPlus size={18} />}
-                    component={Link}
-                    to="https://66c7152ec9bff1037d3f0351--fluffy-paletas-6d57db.netlify.app/"
-                  >
-                    Transfer Funds
-                  </Button> */}
+
                   <Button
                     leftIcon={<IconPlus size={18} />}
                     component={Link}
@@ -248,10 +244,6 @@ const DashboardPage = () => {
                 <DonatorsTable />
               </Card.Section>
               <Card.Section></Card.Section>
-            </Paper>
-            <Paper {...paperProps}>
-              <Title {...subTitleProps}>Donations per Category</Title>
-              <YearlyDonationChart />
             </Paper>
           </Stack>
         </Container>

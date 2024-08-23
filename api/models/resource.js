@@ -15,8 +15,13 @@ const ResourceSchema = new mongoose.Schema({
   experience: { type: String },
   socialMedia: { type: String },
   agreeToTerms: { type: Boolean, required: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  // Linking with User
-  createdAt: { type: Date, default: Date.now }
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Linking with User
+  status: {
+    type: String,
+    enum: ["pending", "accepted", "rejected"],
+    default: "pending",
+  },
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Resource", ResourceSchema);

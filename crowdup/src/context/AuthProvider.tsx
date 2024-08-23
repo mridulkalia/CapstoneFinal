@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -18,42 +24,46 @@ const defaultAuthContext: AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    const savedAuthStatus = localStorage.getItem('isAuthenticated');
-    const savedUserRole = localStorage.getItem('userRole');
-    if (savedAuthStatus === 'true') {
+    const savedAuthStatus = localStorage.getItem("isAuthenticated");
+    const savedUserRole = localStorage.getItem("userRole");
+    if (savedAuthStatus === "true") {
       setIsAuthenticated(true);
-      setIsAdmin(savedUserRole === 'admin');
+      setIsAdmin(savedUserRole === "admin");
     } else {
       setIsAuthenticated(false);
     }
   }, []);
 
   const login = (role: string) => {
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('userRole', role);
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("userRole", role);
     setIsAuthenticated(true);
-    setIsAdmin(role === 'admin');
+    setIsAdmin(role === "admin");
   };
 
   const logout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userRole');
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userRole");
     setIsAuthenticated(false);
     setIsAdmin(false);
   };
 
   const setUserRole = (role: string) => {
-    localStorage.setItem('userRole', role);
-    setIsAdmin(role === 'admin');
+    localStorage.setItem("userRole", role);
+    setIsAdmin(role === "admin");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isAdmin, login, logout, setUserRole }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, isAdmin, login, logout, setUserRole }}
+    >
       {children}
     </AuthContext.Provider>
   );

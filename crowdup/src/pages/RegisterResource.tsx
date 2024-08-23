@@ -40,7 +40,7 @@ interface FormValues {
 const RegisterResourcePage = () => {
   const theme = useMantineTheme();
   const [modalOpened, setModalOpened] = useState(false);
-  const [userId, setUserId] = useState(""); // Replace with logic to get user ID
+  const [userId, setUserId] = useState("");
 
   const form = useForm({
     initialValues: {
@@ -71,12 +71,12 @@ const RegisterResourcePage = () => {
 
   const fetchUserIdByEmail = async (email: string) => {
     try {
-      const response = await axios.get('http://localhost:8000/user-by-email', {
+      const response = await axios.get("http://localhost:8000/user-by-email", {
         params: { email },
       });
       return response.data.userId;
     } catch (error) {
-      console.error('Failed to fetch user ID', error);
+      console.error("Failed to fetch user ID", error);
       return null;
     }
   };
@@ -86,13 +86,12 @@ const RegisterResourcePage = () => {
 
     // Fetch user ID based on email
     const userId = await fetchUserIdByEmail(email);
-  
+
     if (!userId) {
-      console.error('User ID is missing');
+      console.error("User ID is missing");
       return;
     }
     try {
-
       const formData = new FormData();
 
       formData.append("userId", userId); // Add user ID dynamically
@@ -103,7 +102,8 @@ const RegisterResourcePage = () => {
       formData.append("location", values.location);
       formData.append("resourceType", values.resourceType);
       if (values.identity) formData.append("identity", values.identity);
-      if (values.certificate) formData.append("certificate", values.certificate);
+      if (values.certificate)
+        formData.append("certificate", values.certificate);
       formData.append("additionalInfo", values.additionalInfo);
       formData.append("emergencyContactName", values.emergencyContactName);
       formData.append("emergencyContactPhone", values.emergencyContactPhone);
@@ -113,16 +113,21 @@ const RegisterResourcePage = () => {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
       }
-      const response = await axios.post("http://localhost:8000/register-resource", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:8000/register-resource",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       console.log(response);
       if (response.status === 201) {
         showNotification({
           title: "Registration Successful",
-          message: "Your registration is received. We will verify the records and get back to you shortly.",
+          message:
+            "Your registration is received. We will verify the records and get back to you shortly.",
           color: "green",
         });
         setModalOpened(true);

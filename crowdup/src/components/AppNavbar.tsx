@@ -169,16 +169,16 @@ const user = {
 const ICON_SIZE = 18;
 type IProps = BoxProps;
 
-interface CrowdFundingContextType {
-  titleData: string;
-  currentAccount: string;
-  createCampaign: any;
-  getCampaigns: () => Promise<any[]>;
-  getUserCampaigns: () => Promise<any[]>;
-  donate: (pId: number, amount: string) => Promise<void>;
-  getDonations: (pId: number) => Promise<any[]>;
-  connectWallet: () => Promise<void>;
-}
+// interface CrowdFundingContextType {
+//   titleData: string;
+//   currentAccount: string;
+//   createCampaign: any;
+//   getCampaigns: () => Promise<any[]>;
+//   getUserCampaigns: () => Promise<any[]>;
+//   donate: (pId: number, amount: string) => Promise<void>;
+//   getDonations: (pId: number) => Promise<any[]>;
+//   connectWallet: () => Promise<void>;
+// }
 
 const AppNavbar = ({ ...others }: IProps) => {
   const { classes, theme, cx } = useStyles();
@@ -191,13 +191,13 @@ const AppNavbar = ({ ...others }: IProps) => {
   ] = useDisclosure(false);
   const matchesMobile = useMediaQuery("(max-width: 600px)");
 
-  const crowdFundingContext = useContext<CrowdFundingContextType | undefined>(
-    CrowdFundingContext
-  );
-  if (!crowdFundingContext) {
-    throw new Error("useContext must be used within a CrowdFundingProvider");
-  }
-  const { currentAccount, connectWallet } = crowdFundingContext;
+  // const crowdFundingContext = useContext<CrowdFundingContextType | undefined>(
+  //   CrowdFundingContext
+  // );
+  // if (!crowdFundingContext) {
+  //   throw new Error("useContext must be used within a CrowdFundingProvider");
+  // }
+  // const { currentAccount, connectWallet } = crowdFundingContext;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -232,7 +232,7 @@ const AppNavbar = ({ ...others }: IProps) => {
               />
               <AppLinks className={classes.hiddenMobile} />
             </Group>
-            {!currentAccount && (
+            {/* {!currentAccount && (
               <ul className="flex items-center hidden space-x-8 lg:flex">
                 <li>
                   <button
@@ -245,7 +245,7 @@ const AppNavbar = ({ ...others }: IProps) => {
                   </button>
                 </li>
               </ul>
-            )}
+            )} */}
             <Group>
               <ActionIcon
                 variant="filled"
