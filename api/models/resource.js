@@ -16,7 +16,8 @@ const ResourceSchema = new mongoose.Schema({
   socialMedia: { type: String },
   agreeToTerms: { type: Boolean, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  // Linking with User
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+
 });
 
 module.exports = mongoose.model("Resource", ResourceSchema);

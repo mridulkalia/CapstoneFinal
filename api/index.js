@@ -4,7 +4,8 @@ const database = require("./database/mongoDB");
 const dotenv = require("dotenv").config();
 const router = require("./routes/userRoute");
 const cookieParser = require("cookie-parser");
-const resourceRouter = require("./routes/resourceRoute");  // Import the new resource route
+const resourceRouter = require("./routes/resourceRoute"); 
+const ngorouter=require("./routes/ngoHospitalRoutes") 
 const app = new express();
 
 database();
@@ -19,7 +20,8 @@ app.use(
 );
 
 app.use("/", router);
-app.use("/", resourceRouter);  // Add the resource route
+app.use("/", resourceRouter); 
+app.use("/",ngorouter);  // Add the resource route
 
 app.get("/test", (req, res) => {
   res.json("test ok");

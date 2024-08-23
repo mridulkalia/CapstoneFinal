@@ -26,7 +26,7 @@ import {
   IconSettings,
   IconStar,
 } from "@tabler/icons-react";
-import { CrowdFundingContext } from "../../../blockchain/context/CrowdFunding";
+// import { CrowdFundingContext } from "../../../blockchain/context/CrowdFunding";
 import { useState, useContext } from "react";
 import { AppLinks, BrandName, SearchDrawer } from "./index";
 
@@ -191,13 +191,13 @@ const AppNavbar = ({ ...others }: IProps) => {
   ] = useDisclosure(false);
   const matchesMobile = useMediaQuery("(max-width: 600px)");
 
-  const crowdFundingContext = useContext<CrowdFundingContextType | undefined>(
-    CrowdFundingContext
-  );
-  if (!crowdFundingContext) {
-    throw new Error("useContext must be used within a CrowdFundingProvider");
-  }
-  const { currentAccount, connectWallet } = crowdFundingContext;
+  // const crowdFundingContext = useContext<CrowdFundingContextType | undefined>(
+  //   CrowdFundingContext
+  // );
+  // if (!crowdFundingContext) {
+  //   throw new Error("useContext must be used within a CrowdFundingProvider");
+  // }
+  // const { currentAccount, connectWallet } = crowdFundingContext;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -232,7 +232,7 @@ const AppNavbar = ({ ...others }: IProps) => {
               />
               <AppLinks className={classes.hiddenMobile} />
             </Group>
-            {!currentAccount && (
+            {/* {!currentAccount && (
               <ul className="flex items-center hidden space-x-8 lg:flex">
                 <li>
                   <button
@@ -245,7 +245,7 @@ const AppNavbar = ({ ...others }: IProps) => {
                   </button>
                 </li>
               </ul>
-            )}
+            )} */}
             <Group>
               <ActionIcon
                 variant="filled"

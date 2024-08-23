@@ -11,10 +11,13 @@ import {
   LoginPage,
   RegisterResourcePage,
   SignupPage,
+   // Import the new component
 } from "../pages";
 import { AuthLayout, DashboardLayout, PublicLayout } from "../layout";
 import PrivateRoute from "./PrivateRoute";
 import { AuthProvider } from "../context/AuthProvider";
+import RegisterNgoHospitalPage from "../pages/RegisterNgoHospitalPage";
+import LoginNGOHospitalPage from "../pages/LoginNGOHospitalPage";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +102,16 @@ const router = createBrowserRouter([
         element: <RegisterResourcePage />,
       },
     ],
+  },
+  {
+    path: "/register-ngo-hospital", // Add the new route
+    element: <AuthLayout><RegisterNgoHospitalPage></RegisterNgoHospitalPage></AuthLayout>, // Use your new component
+    errorElement: <Error404Page />,
+  },
+  {
+    path: "/login-ngo-hospital", // Add the new route
+    element: <AuthLayout><LoginNGOHospitalPage></LoginNGOHospitalPage></AuthLayout>, // Use your new component
+    errorElement: <Error404Page />,
   },
   {
     path: "/create-campaign",
