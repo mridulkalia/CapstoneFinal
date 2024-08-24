@@ -321,7 +321,8 @@ const LandingNavbar = ({ compressed }: IProps) => {
                 <>
                   <Button
                     component={Link}
-                    to="/create-campaign"
+                    // to="/create-campaign"
+                    to="https://66c8d897bab988f37a398006--merry-alpaca-edbce1.netlify.app/"
                     className={classes.link}
                     {...buttonProps}
                   >
