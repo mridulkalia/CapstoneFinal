@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { ReactNode } from "react";
+import ScrollToTop from "../components/ScrollToTop";
 
 interface AuthLayoutProps {
   children?: ReactNode;
@@ -8,6 +9,7 @@ interface AuthLayoutProps {
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
     <div>
+      <ScrollToTop />
       {children}
       <Outlet />
     </div>
