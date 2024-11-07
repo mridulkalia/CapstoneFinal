@@ -1,8 +1,10 @@
-// controllers/ngoHospitalController.js
 const NGOHospital = require('../models/NGOHospital');
 const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const inventorySchema = require('../models/inventorySchema');
 
 
 exports.addNGOHospital = async (req, res) => {
@@ -50,10 +52,6 @@ exports.getNGOHospitalList = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while fetching the organizations' });
   }
 };
-
-// controllers/ngoHospitalController.js
-const nodemailer = require('nodemailer');
-const crypto = require('crypto');
 
 
 exports.updateNGOHospitalStatus = async (req, res) => {
@@ -135,6 +133,105 @@ exports.updateNGOHospitalStatus = async (req, res) => {
     } catch (error) {
       console.error('Login error:', error);
       res.status(500).json({ message: 'An error occurred during login' });
+    }
+  };
+
+  const priorityMapping = {
+    'High': 3,
+    'Moderate': 2,
+    'Low': 1,
+  };
+  
+  exports.updateInventory = async (req, res) => {
+    try {
+      const { registrationNumber, inventoryData } = req.body; // Registration number and inventory data
+  
+      // Step 1: Validate the incoming data
+      if (!registrationNumber || !Array.isArray(inventoryData) || inventoryData.length === 0) {
+        return res.status(400).json({ message: 'Invalid data. Please provide registrationNumber and a valid inventoryData array.' });
+      }
+  
+      // Step 2: Find the hospital by registration number
+      const hospital = await NGOHospital.findOne({ registrationNumber });
+      if (!hospital) {
+        return res.status(404).json({ message: 'Hospital not found' });
+      }
+  
+      // Step 3: Define item priority, category weights, and calculate the total score
+      const priorityMapping = {
+        high: 10,
+        medium: 5,
+        low: 2
+      };
+  
+      const categoryWeights = {
+        medicalEquipment: 3,
+        oxygenSupplies: 2,
+        other: 1
+      };
+  
+      const inventoryItems = [];
+      let totalScore = 0;
+  
+      for (const item of inventoryData) {
+        // Validate individual item
+        if (!item.itemName || !item.category || !item.quantity || !item.unit || !item.condition) {
+          return res.status(400).json({ message: 'Each item must have itemName, category, quantity, unit, and condition.' });
+        }
+  
+        // Ensure priority is valid and assign score
+        const priority = priorityMapping[item.priority] || 0; // Default to 0 if priority is not recognized
+  
+        // Ensure category weight is valid
+        const categoryWeight = categoryWeights[item.category.toLowerCase()] || 1; // Default to 1 if category is not recognized
+  
+        // Calculate quantity score (based on quantity and category weight)
+        const quantityScore = item.quantity * categoryWeight;
+  
+        // Calculate the total score for the item (priority + quantity score)
+        const itemScore = priority + quantityScore;
+  
+        // Prepare the inventory item
+        const inventoryItem = {
+          itemName: item.itemName,
+          category: item.category,
+          quantity: item.quantity,
+          unit: item.unit,
+          condition: item.condition,
+          additionalDetails: item.additionalDetails || '',
+          weightOrVolume: item.weightOrVolume || '',
+          purchaseDate: item.purchaseDate || null,
+          cost: item.cost || 0,
+          priority: priority, // Store numeric priority for easier calculation
+          categoryWeight: categoryWeight,
+          quantityScore: quantityScore,
+          itemScore: itemScore, // Store the individual item score
+        };
+  
+        inventoryItems.push(inventoryItem);
+        totalScore += itemScore; // Add the item's score to the total score
+      }
+  
+      // Step 4: Create or update the hospital's inventory in the database
+      const updatedInventory = await inventorySchema.create({
+        registrationNumber: hospital.registrationNumber,
+        items: inventoryItems,
+        totalScore: totalScore,
+      });
+  
+      // Step 5: Update the hospital with the new inventory and score
+      hospital.inventory = updatedInventory._id;
+      hospital.inventoryScore = totalScore;
+      await hospital.save();
+  
+      // Step 6: Respond to the client
+      res.status(200).json({
+        message: 'Inventory updated and score calculated successfully.',
+        data: updatedInventory,
+      });
+    } catch (error) {
+      console.error('Error updating inventory:', error);
+      res.status(500).json({ message: 'An error occurred while updating the inventory.' });
     }
   };
   

@@ -2,7 +2,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { addNGOHospital, getNGOHospitalList, updateNGOHospitalStatus, loginNGOHospital } = require('../controllers/ngoHospitalController');
+const { addNGOHospital, getNGOHospitalList, updateNGOHospitalStatus, loginNGOHospital, updateInventory } = require('../controllers/ngoHospitalController');
 
 const router = express.Router();
 
@@ -28,5 +28,7 @@ router.get('/get-ngo-hospital-list', getNGOHospitalList);
 router.post('/update-ngo-hospital-status', updateNGOHospitalStatus);
 
 router.post('/login-hospital', loginNGOHospital);
+router.post('/update-inventory', updateInventory);
+
 
 module.exports = router;

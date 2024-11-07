@@ -20,6 +20,7 @@ import { AuthProvider } from "../context/AuthProvider";
 import RegisterNgoHospitalPage from "../pages/RegisterNgoHospitalPage";
 import LoginNGOHospitalPage from "../pages/LoginNGOHospitalPage";
 import ResourcesPage from "../pages/ResourcesPage";
+import InventoryPage from "../pages/UpdateInventoryPage";
 
 const router = createBrowserRouter([
   {
@@ -137,6 +138,14 @@ const router = createBrowserRouter([
         element: <ResourcesPage />,
       },
     ],
+  },{
+path: "/inventory",  
+  element: (
+    <PrivateRoute>
+      <InventoryPage />
+    </PrivateRoute>
+  ),
+  errorElement: <Error404Page />,
   },
   {
     path: "/register-ngo-hospital", // Add the new route

@@ -1,6 +1,8 @@
-// models/NGOHospital.js
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
+// Import the Inventory Schema to reference it later
+const Inventory = require("./inventorySchema");
 
 const NGOHospitalSchema = new Schema({
   name: {
@@ -15,7 +17,6 @@ const NGOHospitalSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
     match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
   },
   phone: {
@@ -44,7 +45,6 @@ const NGOHospitalSchema = new Schema({
   },
   certificate: {
     type: String,
-    // required: true,
   },
   description: {
     type: String,
@@ -59,8 +59,27 @@ const NGOHospitalSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  password: { type: String }, // Add this line
+  password: { 
+    type: String 
+  },
 
+  // Reference to the inventory associated with this hospital
+  inventory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Inventory',
+  },
+
+  // Inventory score (this can be calculated dynamically based on inventory data)
+  inventoryScore: {
+    type: Number,
+    default: 0,
+  },
+  
+  // Add a field for total inventory value if needed (optional, based on your use case)
+  totalInventoryValue: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("NGOHospital", NGOHospitalSchema);
