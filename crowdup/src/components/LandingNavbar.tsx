@@ -14,10 +14,8 @@ import {
   getStylesRef,
   Group,
   Header,
-  HoverCard,
   rem,
   ScrollArea,
-  SimpleGrid,
   Text,
   ThemeIcon,
   UnstyledButton,
@@ -295,11 +293,11 @@ const LandingNavbar = ({ compressed }: IProps) => {
             >
               <Button
                 component={Link}
-                to="/how-it-works"
+                to="/disaster-preparedness"
                 className={classes.link}
                 {...buttonProps}
               >
-                How it works
+                Disaster Info
               </Button>
               <Button
                 component={Link}
@@ -387,14 +385,6 @@ const LandingNavbar = ({ compressed }: IProps) => {
             {...buttonProps}
           >
             Home
-          </Button>
-          <Button
-            component={Link}
-            to="/how-it-works"
-            className={classes.link}
-            {...buttonProps}
-          >
-            How it works
           </Button>
           <Button
             component={Link}

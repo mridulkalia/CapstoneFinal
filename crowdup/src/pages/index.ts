@@ -9,6 +9,7 @@ import SignupPage from "./Signup";
 import DashboardPage from "./Dashboard";
 import CreateCampaignPage from "./CreateCampaign";
 import RegisterResourcePage from "./RegisterResource.tsx";
+import DisasterInfoPage from "./DisasterPreparedness.tsx";
 
 export {
   HomePage,
@@ -21,5 +22,6 @@ export {
   SignupPage,
   DashboardPage,
   CreateCampaignPage,
+  DisasterInfoPage,
   RegisterResourcePage,
 };

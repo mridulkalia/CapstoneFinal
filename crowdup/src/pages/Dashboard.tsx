@@ -34,6 +34,7 @@ import { Link } from "react-router-dom";
 import AdminDashboard from "../components/AdminDashboard";
 import { showNotification } from "@mantine/notifications";
 import { DonatorsTable } from "../components";
+import DisasterAdminPanel from "../components/DisasterAdminPortal";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -273,6 +274,13 @@ const DashboardPage = () => {
                   </Table>
                 </ScrollArea>
               </Card.Section>
+            </Paper>
+            <Paper {...paperProps}>
+              <Card.Section>
+                <Title {...subTitleProps}>Alert System</Title>
+                <DisasterAdminPanel />
+              </Card.Section>
+              <Card.Section></Card.Section>
             </Paper>
             <Paper {...paperProps}>
               <Card.Section>

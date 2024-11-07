@@ -11,7 +11,8 @@ import {
   LoginPage,
   RegisterResourcePage,
   SignupPage,
-   // Import the new component
+  DisasterInfoPage,
+  // Import the new component
 } from "../pages";
 import { AuthLayout, DashboardLayout, PublicLayout } from "../layout";
 import PrivateRoute from "./PrivateRoute";
@@ -39,13 +40,33 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <AuthLayout><SignupPage /></AuthLayout>,
+    element: (
+      <AuthLayout>
+        <SignupPage />
+      </AuthLayout>
+    ),
     errorElement: <Error404Page />,
   },
   {
     path: "/login",
-    element: <AuthLayout><LoginPage /></AuthLayout>,
+    element: (
+      <AuthLayout>
+        <LoginPage />
+      </AuthLayout>
+    ),
     errorElement: <Error404Page />,
+  },
+  {
+    path: "/disaster-preparedness",
+    element: <PublicLayout />,
+    errorElement: <Error404Page />,
+    children: [
+      {
+        path: "",
+        index: true,
+        element: <DisasterInfoPage />,
+      },
+    ],
   },
   {
     path: "/how-it-works",
@@ -76,7 +97,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  
+
   {
     path: "/dashboard",
     element: (
@@ -113,18 +134,26 @@ const router = createBrowserRouter([
       {
         path: "",
         index: true,
-        element: <ResourcesPage/>,
+        element: <ResourcesPage />,
       },
     ],
   },
   {
     path: "/register-ngo-hospital", // Add the new route
-    element: <AuthLayout><RegisterNgoHospitalPage></RegisterNgoHospitalPage></AuthLayout>, // Use your new component
+    element: (
+      <AuthLayout>
+        <RegisterNgoHospitalPage></RegisterNgoHospitalPage>
+      </AuthLayout>
+    ), // Use your new component
     errorElement: <Error404Page />,
   },
   {
     path: "/login-ngo-hospital", // Add the new route
-    element: <AuthLayout><LoginNGOHospitalPage></LoginNGOHospitalPage></AuthLayout>, // Use your new component
+    element: (
+      <AuthLayout>
+        <LoginNGOHospitalPage></LoginNGOHospitalPage>
+      </AuthLayout>
+    ), // Use your new component
     errorElement: <Error404Page />,
   },
   {

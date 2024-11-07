@@ -4,8 +4,9 @@ const database = require("./database/mongoDB");
 const dotenv = require("dotenv").config();
 const router = require("./routes/userRoute");
 const cookieParser = require("cookie-parser");
-const resourceRouter = require("./routes/resourceRoute"); 
-const ngorouter=require("./routes/ngoHospitalRoutes") 
+const resourceRouter = require("./routes/resourceRoute");
+const ngorouter = require("./routes/ngoHospitalRoutes");
+const disasterRouter = require("./routes/disasterRoute");
 const app = new express();
 
 database();
@@ -20,8 +21,9 @@ app.use(
 );
 
 app.use("/", router);
-app.use("/", resourceRouter); 
-app.use("/",ngorouter);  // Add the resource route
+app.use("/", resourceRouter);
+app.use("/", ngorouter);
+app.use("/", disasterRouter);
 
 app.get("/test", (req, res) => {
   res.json("test ok");
