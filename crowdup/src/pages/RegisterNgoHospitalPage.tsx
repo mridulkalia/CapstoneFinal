@@ -97,7 +97,7 @@ const AddOrganizationPage = () => {
       </Title>
       <Paper
         withBorder
-        shadow="xl" // Increased shadow depth
+        shadow="xl"
         p={30}
         radius="lg"
         sx={{
