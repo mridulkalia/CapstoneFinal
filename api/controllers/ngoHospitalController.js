@@ -26,12 +26,10 @@ exports.addNGOHospital = async (req, res) => {
     });
 
     if (existingOrg) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "An organization with this registration number or email already exists",
-        });
+      return res.status(400).json({
+        message:
+          "An organization with this registration number or email already exists",
+      });
     }
     const certificateFile = req.file;
     // if (!certificateFile) {
@@ -52,12 +50,10 @@ exports.addNGOHospital = async (req, res) => {
     });
 
     await newNGOHospital.save();
-    res
-      .status(201)
-      .json({
-        message: "NGO/Hospital submitted for review",
-        data: newNGOHospital,
-      });
+    res.status(201).json({
+      message: "NGO/Hospital submitted for review",
+      data: newNGOHospital,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -286,6 +282,7 @@ exports.loginNGOHospital = async (req, res) => {
         name: organization.name,
         email: organization.email,
         registrationNumber: organization.registrationNumber,
+        city: organization.city,
       },
     });
   } catch (error) {
@@ -310,12 +307,10 @@ exports.updateInventory = async (req, res) => {
       !Array.isArray(inventoryData) ||
       inventoryData.length === 0
     ) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Invalid data. Please provide registrationNumber and a valid inventoryData array.",
-        });
+      return res.status(400).json({
+        message:
+          "Invalid data. Please provide registrationNumber and a valid inventoryData array.",
+      });
     }
 
     // Step 2: Find the hospital by registration number
@@ -359,12 +354,10 @@ exports.updateInventory = async (req, res) => {
         !item.unit ||
         !item.condition
       ) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "Each item must have itemName, category, quantity, unit, and condition.",
-          });
+        return res.status(400).json({
+          message:
+            "Each item must have itemName, category, quantity, unit, and condition.",
+        });
       }
 <<<<<<< HEAD
       const priority = priorityMapping[item.priority] || 0; // Default to 0 if priority is not recognized

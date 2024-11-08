@@ -18,6 +18,10 @@ const DisasterSchema = new mongoose.Schema({
         "Coordinates should contain exactly two numbers (latitude, longitude).",
     },
   },
+  city: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     required: true,
