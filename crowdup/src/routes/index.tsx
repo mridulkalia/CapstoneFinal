@@ -21,6 +21,7 @@ import RegisterNgoHospitalPage from "../pages/RegisterNgoHospitalPage";
 import LoginNGOHospitalPage from "../pages/LoginNGOHospitalPage";
 import ResourcesPage from "../pages/ResourcesPage";
 import InventoryPage from "../pages/UpdateInventoryPage";
+import HospitalListPage from "../pages/HospitalListPage";
 
 const router = createBrowserRouter([
   {
@@ -138,14 +139,24 @@ const router = createBrowserRouter([
         element: <ResourcesPage />,
       },
     ],
-  },{
-path: "/inventory",  
-  element: (
-    <PrivateRoute>
-      <InventoryPage />
-    </PrivateRoute>
-  ),
-  errorElement: <Error404Page />,
+  },
+  {
+    path: "/inventory",
+    element: (
+      <PrivateRoute>
+        <InventoryPage />
+      </PrivateRoute>
+    ),
+    errorElement: <Error404Page />,
+  },
+  {
+    path: "/hospitals-ngos",
+    element: (
+      <PrivateRoute>
+        <HospitalListPage />
+      </PrivateRoute>
+    ),
+    errorElement: <Error404Page />,
   },
   {
     path: "/register-ngo-hospital", // Add the new route

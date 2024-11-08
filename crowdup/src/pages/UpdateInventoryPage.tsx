@@ -3,7 +3,6 @@ import { Text, Select, SegmentedControl, Group, Button, Card, Divider, Container
 import axios from 'axios';
 import { log } from 'console';
 
-// Priority mapping for items
 const priorityMapping: Record<string, string> = {
   'Ventilator': 'High',
   'Oxygen Cylinder': 'High',
@@ -36,7 +35,6 @@ const priorityMapping: Record<string, string> = {
   'Pill Boxes': 'Low',
 };
 
-// Available categories for stock items
 const categories = [
   'Medical Equipment',
   'Medications',
@@ -46,7 +44,6 @@ const categories = [
   'Other'
 ];
 
-// List of available inventory items
 const inventoryItemsList = [
     'Ventilator', 'Oxygen Cylinder', 'ICU Bed', 'Surgical Mask', 'PPE Kit', 'Gloves', 'IV Fluids', 'Syringes', 'Medical Equipment',
     'Medications', 'Wheelchairs', 'Blood Bags', 'Diagnostics Equipment', 'X-ray Machine', 'MRI Machine', 'Infusion Pump', 'Anesthesia Machine',
@@ -105,12 +102,13 @@ const InventoryPage: React.FC = () => {
     }
     setInventoryItems(updatedItems);
   };
+  
 
-  const handleConditionChange = (value: string, index: number) => {
-    const updatedItems = [...inventoryItems];
-    updatedItems[index].condition = value;
-    setInventoryItems(updatedItems);
-  };
+const handleConditionChange = (value: string, index: number) => {
+  const updatedItems = [...inventoryItems];
+  updatedItems[index].condition = value;
+  setInventoryItems(updatedItems);
+};
 
   const handleAddStockItem = () => {
     setInventoryItems([
@@ -129,6 +127,29 @@ const InventoryPage: React.FC = () => {
     ]);
   };
 
+
+  const checkInventory = async () => {
+    try {
+      // Send the registration number to the backend to check if inventory exists
+      const response = await axios.get(
+        `http://localhost:8000/inventory/${hospitalDetails.registrationNumber}`
+      );
+      
+      // Check if inventoryItems are available in the response
+      if (response.data && response.data.inventoryItems && response.data.inventoryItems.length > 0) {
+        // If inventory exists, populate the inventoryItems state with the existing data
+        setInventoryItems(response.data.inventoryItems); // Correct reference to inventoryItems
+        setSuccess("Inventory found!");
+      } else {
+        setInventoryItems([]); // Clear inventory if not found
+        setSuccess("No inventory found for this hospital.");
+      }
+    } catch (error) {
+      setError("Failed to check inventory.");
+      setSuccess(null);
+      console.error(error);
+    }
+  };
   const handleSubmit = async () => {
     // Validate form
     if (inventoryItems.some(item => !item.itemName || !item.quantity || !item.unit || !item.condition)) {
@@ -216,7 +237,9 @@ const InventoryPage: React.FC = () => {
             type="email"
           />
         </Stack>
-
+        <Button mt="lg" onClick={checkInventory}>
+          Check Inventory
+        </Button>
         <Divider my="lg" />
 
         {/* Inventory Table */}
