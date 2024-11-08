@@ -307,14 +307,26 @@ const LandingNavbar = ({ compressed }: IProps) => {
               >
                 Campaigns
               </Button>
-              <Button
-                component={Link}
-                to="/registerResource"
-                className={classes.link}
-                {...buttonProps}
-              >
-                Register as Resource
-              </Button>
+              {role !== "ngo_hospital" && role != "admin" && (
+                <Button
+                  component={Link}
+                  to="/registerResource"
+                  className={classes.link}
+                  {...buttonProps}
+                >
+                  Register as Resource
+                </Button>
+              )}
+              {role !== "user" && role != "admin" && (
+                <Button
+                  component={Link}
+                  to="/inventory"
+                  className={classes.link}
+                  {...buttonProps}
+                >
+                  Inventory
+                </Button>
+              )}
               {role === "admin" || role === "ngo_hospital" ? (
                 <>
                   <Button

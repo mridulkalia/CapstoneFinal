@@ -85,6 +85,7 @@ exports.updateNGOHospitalStatus = async (req, res) => {
 
     if (!["approved", "rejected"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
+<<<<<<< HEAD
     }
     const organization = await NGOHospital.findById(id);
     if (!organization) {
@@ -209,6 +210,122 @@ exports.updateInventory = async (req, res) => {
         totalScore: 0,
       });
     }
+=======
+    }
+    const organization = await NGOHospital.findById(id);
+    if (!organization) {
+      return res.status(404).json({ message: "Organization not found" });
+    }
+    let password = ""; // Define password variable
+    if (status === "approved") {
+      password = crypto.randomBytes(8).toString("hex");
+      const hashedPassword = await bcrypt.hash(password, 10);
+      organization.password = hashedPassword;
+    }
+    organization.status = status;
+    await organization.save();
+
+    if (status === "approved") {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER, // Use environment variables
+          pass: process.env.EMAIL_PASS, // Use environment variables
+        },
+      });
+      await transporter.sendMail({
+        from: "your-email@example.com",
+        to: organization.email,
+        subject: "Your Account has been Approved",
+        text: `Congratulations! Your account has been approved. Here are your login credentials:\n\nUsername: ${organization.email}\nPassword: ${password}`,
+      });
+    }
+
+    res
+      .status(200)
+      .json({ message: `Organization ${status}`, data: organization });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while updating the status" });
+  }
+};
+
+exports.loginNGOHospital = async (req, res) => {
+  try {
+    const { email, registrationNumber, password } = req.body;
+
+    // Validate input
+    if (!email || !registrationNumber || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Find organization by email and registration number
+    const organization = await NGOHospital.findOne({
+      email,
+      registrationNumber,
+    });
+
+    if (!organization) {
+      return res.status(404).json({ message: "Organization not found" });
+    }
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, organization.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // If successful, return user information
+    res.status(200).json({
+      message: "Login successful",
+      organization: {
+        id: organization._id,
+        name: organization.name,
+        email: organization.email,
+        registrationNumber: organization.registrationNumber,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "An error occurred during login" });
+  }
+};
+
+const priorityMapping = {
+  High: 3,
+  Moderate: 2,
+  Low: 1,
+};
+
+exports.updateInventory = async (req, res) => {
+  try {
+    const { registrationNumber, inventoryData } = req.body; // Registration number and inventory data
+
+    // Step 1: Validate the incoming data
+    if (
+      !registrationNumber ||
+      !Array.isArray(inventoryData) ||
+      inventoryData.length === 0
+    ) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Invalid data. Please provide registrationNumber and a valid inventoryData array.",
+        });
+    }
+
+    // Step 2: Find the hospital by registration number
+    const hospital = await NGOHospital.findOne({ registrationNumber });
+    if (!hospital) {
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+
+    // Step 3: Define item priority, category weights, and calculate the total score
+>>>>>>> 8d833baca5cb1d1c513e2e606135c13533c87fb6
     const priorityMapping = {
       high: 10,
       medium: 5,
@@ -221,12 +338,15 @@ exports.updateInventory = async (req, res) => {
       other: 1,
     };
 
+<<<<<<< HEAD
     const conditionImpact = {
       new: 1.2,
       used: 1,
       damaged: 0.5,
     };
 
+=======
+>>>>>>> 8d833baca5cb1d1c513e2e606135c13533c87fb6
     const inventoryItems = [];
     let totalScore = 0;
 
@@ -246,6 +366,7 @@ exports.updateInventory = async (req, res) => {
               "Each item must have itemName, category, quantity, unit, and condition.",
           });
       }
+<<<<<<< HEAD
       const priority = priorityMapping[item.priority] || 0; // Default to 0 if priority is not recognized
       const categoryWeight = categoryWeights[item.category.toLowerCase()] || 1; // Default to 1 if category is not recognized
       const conditionMultiplier =
@@ -253,6 +374,22 @@ exports.updateInventory = async (req, res) => {
       const quantityScore =
         item.quantity * categoryWeight * conditionMultiplier;
       const itemScore = priority + quantityScore;
+=======
+
+      // Ensure priority is valid and assign score
+      const priority = priorityMapping[item.priority] || 0; // Default to 0 if priority is not recognized
+
+      // Ensure category weight is valid
+      const categoryWeight = categoryWeights[item.category.toLowerCase()] || 1; // Default to 1 if category is not recognized
+
+      // Calculate quantity score (based on quantity and category weight)
+      const quantityScore = item.quantity * categoryWeight;
+
+      // Calculate the total score for the item (priority + quantity score)
+      const itemScore = priority + quantityScore;
+
+      // Prepare the inventory item
+>>>>>>> 8d833baca5cb1d1c513e2e606135c13533c87fb6
       const inventoryItem = {
         itemName: item.itemName,
         category: item.category,
@@ -265,7 +402,10 @@ exports.updateInventory = async (req, res) => {
         cost: item.cost || 0,
         priority: priority, // Store numeric priority for easier calculation
         categoryWeight: categoryWeight,
+<<<<<<< HEAD
         conditionMultiplier: conditionMultiplier,
+=======
+>>>>>>> 8d833baca5cb1d1c513e2e606135c13533c87fb6
         quantityScore: quantityScore,
         itemScore: itemScore, // Store the individual item score
       };
@@ -273,6 +413,7 @@ exports.updateInventory = async (req, res) => {
       inventoryItems.push(inventoryItem);
       totalScore += itemScore; // Add the item's score to the total score
     }
+<<<<<<< HEAD
     existingInventory.items = inventoryItems;
     existingInventory.totalScore = totalScore;
     await existingInventory.save();
@@ -285,6 +426,25 @@ exports.updateInventory = async (req, res) => {
     res.status(200).json({
       message: "Inventory updated and score calculated successfully.",
       data: existingInventory,
+=======
+
+    // Step 4: Create or update the hospital's inventory in the database
+    const updatedInventory = await inventorySchema.create({
+      registrationNumber: hospital.registrationNumber,
+      items: inventoryItems,
+      totalScore: totalScore,
+    });
+
+    // Step 5: Update the hospital with the new inventory and score
+    hospital.inventory = updatedInventory._id;
+    hospital.inventoryScore = totalScore;
+    await hospital.save();
+
+    // Step 6: Respond to the client
+    res.status(200).json({
+      message: "Inventory updated and score calculated successfully.",
+      data: updatedInventory,
+>>>>>>> 8d833baca5cb1d1c513e2e606135c13533c87fb6
     });
   } catch (error) {
     console.error("Error updating inventory:", error);
@@ -293,6 +453,7 @@ exports.updateInventory = async (req, res) => {
       .json({ message: "An error occurred while updating the inventory." });
   }
 };
+<<<<<<< HEAD
 
 exports.getInventory = async (req, res) => {
   try {
@@ -340,3 +501,5 @@ exports.getAllHospitals = async (req, res) => {
   }
 };
 
+=======
+>>>>>>> 8d833baca5cb1d1c513e2e606135c13533c87fb6
