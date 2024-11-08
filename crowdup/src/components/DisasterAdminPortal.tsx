@@ -19,6 +19,7 @@ interface Disaster {
   type: string;
   coordinates: [number, number];
   description: string;
+  city?: string; // New city field
 }
 
 interface DisasterFormProps {
@@ -34,6 +35,7 @@ const DisasterAdminPanel: React.FC = () => {
     type: "",
     coordinates: [0, 0],
     description: "",
+    city: "", // Initialize with empty city
     _id: "",
   });
   const [modalOpened, setModalOpened] = useState(false);
@@ -60,6 +62,7 @@ const DisasterAdminPanel: React.FC = () => {
       type: formData.type,
       coordinates: [latitude, longitude],
       description: formData.description,
+      city: formData.city, // Include city in payload
     };
 
     try {
@@ -71,7 +74,13 @@ const DisasterAdminPanel: React.FC = () => {
       } else {
         await axios.post("http://localhost:8000/disasters", data);
       }
-      setFormData({ type: "", coordinates: [0, 0], description: "", _id: "" });
+      setFormData({
+        type: "",
+        coordinates: [0, 0],
+        description: "",
+        city: "",
+        _id: "",
+      });
       setModalOpened(false);
       fetchDisasters();
     } catch (error) {
@@ -93,6 +102,7 @@ const DisasterAdminPanel: React.FC = () => {
       type: disaster.type,
       coordinates: disaster.coordinates,
       description: disaster.description,
+      city: disaster.city, // Populate city for editing
       _id: disaster._id,
     });
     setModalOpened(true);
@@ -105,13 +115,7 @@ const DisasterAdminPanel: React.FC = () => {
       </Title>
 
       <Group position="center" mb="md">
-        <Button
-          onClick={() => {
-            setModalOpened(true);
-          }}
-        >
-          Add New Disaster
-        </Button>
+        <Button onClick={() => setModalOpened(true)}>Add New Disaster</Button>
       </Group>
 
       <Table highlightOnHover>
@@ -120,6 +124,7 @@ const DisasterAdminPanel: React.FC = () => {
             <th>Type</th>
             <th>Coordinates</th>
             <th>Description</th>
+            <th>City</th> {/* Add city column */}
             <th>Actions</th>
           </tr>
         </thead>
@@ -129,6 +134,8 @@ const DisasterAdminPanel: React.FC = () => {
               <td>{disaster.type}</td>
               <td>{disaster.coordinates.join(", ")}</td>
               <td>{disaster.description}</td>
+              <td>{disaster.city || "N/A"}</td>{" "}
+              {/* Display city if available */}
               <td>
                 <Group spacing="xs">
                   <Button
@@ -191,7 +198,7 @@ const DisasterForm: React.FC<DisasterFormProps> = ({
           {
             params: {
               q: query,
-              key: "c81153053cf44a4c84dae58aced9685b", // Replace with your OpenCage API Key
+              key: "c81153053cf44a4c84dae58aced9685b",
               limit: 5,
             },
           }
@@ -204,24 +211,6 @@ const DisasterForm: React.FC<DisasterFormProps> = ({
       } catch (error) {
         console.error("Error fetching city suggestions:", error);
       }
-    }
-  };
-
-  const fetchCoordinates = async (city: string) => {
-    try {
-      const response = await axios.get(
-        "https://api.opencagedata.com/geocode/v1/json",
-        {
-          params: {
-            q: city,
-            key: "c81153053cf44a4c84dae58aced9685b",
-          },
-        }
-      );
-      const { lat, lng } = response.data.results[0].geometry;
-      setFormData({ ...formData, coordinates: [lat, lng] });
-    } catch (error) {
-      console.error("Error fetching coordinates:", error);
     }
   };
 
@@ -252,10 +241,10 @@ const DisasterForm: React.FC<DisasterFormProps> = ({
           <TextInput
             label="City"
             placeholder="Enter city name"
-            value={cityName}
+            value={formData.city || ""}
             onChange={(e) => {
-              setCityName(e.target.value);
-              fetchCitySuggestions(e.target.value); // Fetch city suggestions as user types
+              setFormData({ ...formData, city: e.target.value });
+              fetchCitySuggestions(e.target.value); // Fetch city suggestions
             }}
             required
             mb="sm"
@@ -303,7 +292,7 @@ const DisasterForm: React.FC<DisasterFormProps> = ({
 
       <Group position="center" mt="md">
         <Button type="submit">{formData._id ? "Update" : "Submit"}</Button>
-        <Button variant="outline" onClick={closeModal}>
+        <Button onClick={closeModal} variant="outline">
           Cancel
         </Button>
       </Group>

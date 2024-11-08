@@ -1,5 +1,6 @@
 import HeroSection from "../sections/Home/Hero.tsx";
 import {
+  Alert,
   Box,
   BoxProps,
   Container,
@@ -10,13 +11,16 @@ import {
 } from "@mantine/core";
 import { TitleBadge } from "../components";
 import FeaturesSection from "../sections/Home/Features.tsx";
-// import StatsSection from "../sections/Home/Stats";
 import JoinUsSection from "../sections/Home/JoinUs";
 import WaysToFundSection from "../sections/Home/WaysToFund";
 import CampaignsSection from "../sections/Home/Campaigns";
 import GetStartedSection from "../sections/Home/GetStarted";
 import TestimonialsSection from "../sections/Home/Testimonials";
 import { Helmet } from "react-helmet";
+import AlertBanner from "../components/AlertBanner.tsx";
+import { useAuth } from "../context/AuthProvider.tsx";
+import { useEffect, useState } from "react";
+// import { checkCityAlert } from "../services/disasterService.js";
 
 const HomePage = (): JSX.Element => {
   const boxProps: BoxProps = {
@@ -40,12 +44,61 @@ const HomePage = (): JSX.Element => {
     sx: { lineHeight: "28px" },
   };
 
+  // interface AlertData {
+  //   message: string;
+  // }
+
+  const { isAuthenticated } = useAuth();
+  const [userCity, setUserCity] = useState<string | null>(null);
+  // const [alertData, setAlertData] = useState<AlertData | null>(null);
+
+  useEffect(() => {
+    // Retrieve user's city from local storage or wherever it's stored
+    const savedUserCity = localStorage.getItem("userCity");
+    if (savedUserCity) {
+      setUserCity(savedUserCity);
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   // Retrieve userCity from local storage
+  //   const userCity = localStorage.getItem("userCity");
+
+  //   if (userCity) {
+  //     // Check for an active alert in the user's city
+  //     checkCityAlert(userCity)
+  //       .then((data) => {
+  //         if (data.alertActive) {
+  //           setAlertData({
+  //             message: data.alertMessage || "Alert active in your area!",
+  //           });
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching alert data:", error);
+  //       });
+  //   }
+  // }, []);
+
   return (
     <>
       <Helmet>
         <title>Home</title>
       </Helmet>
       <Box>
+        {/* {alertData && (
+          <Alert
+            title="Emergency Alert"
+            color="red"
+            radius="md"
+            style={{ marginBottom: "1rem", zIndex: 10 }}
+          >
+            {alertData.message || "Alert active in your area!"}
+          </Alert>
+        )} */}
+        {isAuthenticated && userCity && (
+          <AlertBanner userCity={userCity} navbarHeight={50} />
+        )}
         <HeroSection />
         <Container>
           <Box {...boxProps}>
@@ -58,11 +111,7 @@ const HomePage = (): JSX.Element => {
             </Text>
           </Box>
           <FeaturesSection boxProps={boxProps} subtitleProps={subTitleProps} />
-          {/* <StatsSection
-            boxProps={boxProps}
-            titleProps={titleProps}
-            subtitleProps={subTitleProps}
-          /> */}
+
           <JoinUsSection
             boxProps={boxProps}
             titleProps={titleProps}

@@ -50,6 +50,7 @@
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.10.0",
     "react-time-picker": "^7.0.0",
+    "tabler-icons-react": "^1.56.0",
     "web3modal": "^1.9.12"
   },
   "devDependencies": {
