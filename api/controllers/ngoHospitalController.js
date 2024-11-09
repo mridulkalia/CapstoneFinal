@@ -369,10 +369,10 @@ exports.getInventory = async (req, res) => {
 exports.getAllHospitals = async (req, res) => {
   try {
     const { sortBy, filterBy, filterValue, page = 1, pageSize = 10 } = req.query;
-    console.log('Incoming Request:', req.query);
+    // console.log('Incoming Request:', req.query);
 
     // Log the query parameters to verify if `sortBy` is being passed correctly
-    console.log("Request Query Parameters:", req.query);
+    // console.log("Request Query Parameters:", req.query);
 
     // Initialize the query object
     let query = {};
@@ -410,15 +410,15 @@ exports.getAllHospitals = async (req, res) => {
       .skip((page - 1) * pageSize)
       .limit(parseInt(pageSize, 10));
 
-    console.log('Before Sorting:', hospitals);
+    // console.log('Before Sorting:', hospitals);
     hospitals.sort((a, b) => a.inventoryScore - b.inventoryScore); // Manual sort to see if issue persists
-    console.log('After Manual Sorting:', hospitals);
+    // console.log('After Manual Sorting:', hospitals);
 
     // Check if hospitals are returned correctly
     if (sortBy && sortBy.includes('inventoryScore')) {
-      console.log('Sorted Hospitals by Inventory Score:');
+      // console.log('Sorted Hospitals by Inventory Score:');
       hospitals.forEach(hospital => {
-        console.log(`Hospital: ${hospital.name}, Inventory Score: ${hospital.inventoryScore}, Type: ${typeof hospital.inventoryScore}`);
+        // console.log(`Hospital: ${hospital.name}, Inventory Score: ${hospital.inventoryScore}, Type: ${typeof hospital.inventoryScore}`);
       });
     }
 
