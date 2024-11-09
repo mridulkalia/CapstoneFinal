@@ -16,7 +16,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
-import { showSuccess } from "../utils/notifications";
+import { showError, showSuccess } from "../utils/notifications";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,6 +60,7 @@ const LoginPage = () => {
 
       if (response.data.status === false) {
         console.error("Login failed:", response.data.msg || "Unknown error");
+        showError(response.data.msg || "Login failed. Please try again.");
       } else {
         localStorage.setItem("role", formData.profile);
         showSuccess("Login successful! Redirecting...");
