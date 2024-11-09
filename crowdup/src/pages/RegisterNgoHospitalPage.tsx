@@ -72,6 +72,12 @@ const AddOrganizationPage = () => {
           color: "green",
         });
         setModalOpened(true);
+        showNotification({
+          title: "Submission Successful",
+          message: "Your organization has been submitted for review.",
+          color: "green",
+        });
+        
       }
     } catch (error) {
       showNotification({

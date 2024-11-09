@@ -1,5 +1,5 @@
 import { showNotification } from "@mantine/notifications";
-// import { IconAlertCircle, IconCheckCircle, IconX } from "@tabler/icons-react";
+// import { IconCircleCheck, IconCheckCircle, IconX } from "@tabler/icons-react";
 import React from "react";
 
 // Show error notification
@@ -26,7 +26,7 @@ export function showSuccess(message) {
     title: "Success",
     message,
     color: "green",
-    // icon: React.createElement(IconCheckCircle, { size: 20 }),
+    // icon: React.createElement(IconCircleCheck, { size: 20 }),
     style: {
       border: "2px solid green",
       padding: "12px",
