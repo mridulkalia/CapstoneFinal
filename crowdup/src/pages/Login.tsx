@@ -67,9 +67,11 @@ const LoginPage = () => {
         login(formData.profile);
         navigate("/");
       }
-    } catch (error) {
+    } catch (error: unknown) {
       setLoading(false);
+
       if (axios.isAxiosError(error)) {
+        showError(error.response?.data?.message || "An unexpected error occurred. Please try again.");
         console.error(
           "Error during login:",
           error.response?.data?.message || error.message

@@ -395,7 +395,7 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@babel/runtime@^7.23.2", "@babel/runtime@^7.25.0":
+"@babel/runtime@^7.23.2", "@babel/runtime@^7.25.0", "@babel/runtime@^7.26.0":
   version "7.26.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.26.0.tgz#8600c2f595f277c60815256418b85356a65173c1"
   integrity sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==
@@ -1033,6 +1033,13 @@
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-6.0.9.tgz#d6acc689443e99a5a1ea490fbdbc8dee1aa8568d"
   integrity sha512-zEDZixO8dw2ZSNZiQ1g7S+Bq2q4E8ps6bvpyZsxpiXBdh3g2H0WOEdJdDpBTiTRPWotSlU1kaKN3tOplCRDQ2Q==
 
+"@mui/icons-material@^6.1.6":
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-6.1.6.tgz#bfaf32874a9f9ec88c07d1ca132d1a0671e9ed7c"
+  integrity sha512-5r9urIL2lxXb/sPN3LFfFYEibsXJUb986HhhIeu1gOcte460pwdSiEhBSxkAuyT8Dj7jvu9MjqSBmSumQELo8A==
+  dependencies:
+    "@babel/runtime" "^7.26.0"
+
 "@noble/curves@1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.2.0.tgz#92d7e12e4e49b23105a2555c6984d41733d65c35"
@@ -1228,18 +1235,17 @@
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.5.0.tgz#57618e57942a5f0131374a9fdb0167e25a117fdc"
   integrity sha512-bkUDCp8o1MvFO+qxkODcbhSqRa6P2GXgrGZVpt0dCXNW2HCSCqYI0ZoAqEOSAjRWmmlKcYgFvN4B4S+zo/f8kg==
 
-"@tabler/icons-react@^2.17.0":
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-2.17.0.tgz#8d7b33958bdef17c2aadaa0899b87a259c9f5f01"
-  integrity sha512-kuEW+qNwRqcK5iMl7qTapzX2NiMOwPg4Az01d+IZ1DIMwaZ7iKPJaIor2ihKFLPYrT9D5BZHXB8R5mSkw0FETg==
+"@tabler/icons-react@^3.21.0":
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-3.21.0.tgz#195aa60c16a5c3cf20e03adca6144ea340c573de"
+  integrity sha512-Qq0GnZzzccbv/zuMyXAUUPlogNAqx9KsF8cr/ev3bxs+GMObqNEjXv1eZl9GFzxyQTS435siJNU8A1BaIYhX8g==
   dependencies:
-    "@tabler/icons" "2.17.0"
-    prop-types "^15.7.2"
+    "@tabler/icons" "3.21.0"
 
-"@tabler/icons@2.17.0":
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.17.0.tgz#3b5ac3d41576894d3e18cd8014ba8ce33f3634be"
-  integrity sha512-UeJaylOGNRhQKyDlgZfrQ3UPSGlfVQuXcmCsTYeXioKKepibW6VZ3H36Lo1jvBTBkQD2e9m+k2NxwkztOTXwrA==
+"@tabler/icons@3.21.0":
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.21.0.tgz#d48b5d96d56736d4bd7d32b4a77b1c3e8df12908"
+  integrity sha512-5+GkkmWCr1wgMor5cOF1/YYflTQdc15y10FUikJ3HW8hDiFjfbuoAHJi17FT1vwsr1sA78rkJMn+fDoOOjnnPA==
 
 "@tiptap/core@^2.0.3":
   version "2.0.3"

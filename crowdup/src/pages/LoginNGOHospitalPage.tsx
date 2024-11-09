@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, ChangeEvent, FormEvent } from "react";
+import { showNotification } from "@mantine/notifications";
 
 const LoginNGOHospitalPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,6 +47,12 @@ const LoginNGOHospitalPage = () => {
       );
       if (response.data.status === false) {
         console.error("Login failed:", response.data.msg || "Unknown error");
+        showNotification({
+          title: "Login Failed",
+          message: response.data.msg || "Unknown error. Please try again.",
+          color: "red",
+        });
+        
       } else {
         const { city } = response.data.organization;
         localStorage.setItem("isAuthenticated", "true");
@@ -54,11 +61,29 @@ const LoginNGOHospitalPage = () => {
           localStorage.setItem("userCity", city);
         } else {
           console.error("City is not available in the response.");
+          showNotification({
+            title: "Warning",
+            message: "City information is not available in the response.",
+            color: "orange",
+          });
+          
         }
         navigate("/");
+        showNotification({
+          title: "Success",
+          message: "Logged in successfully!",
+          color: "green",
+        });
+        
       }
     } catch (error) {
       console.error("Error during login:", error);
+      showNotification({
+        title: "Error",
+        message: "An error occurred during login. Please check your details and try again.",
+        color: "red",
+      });
+      
     } finally {
       setLoading(false);
     }
