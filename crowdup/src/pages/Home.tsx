@@ -48,7 +48,7 @@ const HomePage = (): JSX.Element => {
   //   message: string;
   // }
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const [userCity, setUserCity] = useState<string | null>(null);
   // const [alertData, setAlertData] = useState<AlertData | null>(null);
 
@@ -86,17 +86,7 @@ const HomePage = (): JSX.Element => {
         <title>Home</title>
       </Helmet>
       <Box>
-        {/* {alertData && (
-          <Alert
-            title="Emergency Alert"
-            color="red"
-            radius="md"
-            style={{ marginBottom: "1rem", zIndex: 10 }}
-          >
-            {alertData.message || "Alert active in your area!"}
-          </Alert>
-        )} */}
-        {isAuthenticated && userCity && (
+        {isAuthenticated && userCity && !isAdmin && (
           <AlertBanner userCity={userCity} navbarHeight={50} />
         )}
         <HeroSection />
