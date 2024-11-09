@@ -12,8 +12,11 @@ interface AlertBannerProps {
 
 // Define the blinking animation
 const blinkAnimation = keyframes`
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0% { opacity: 0.8; transform: scale(1); }
+  25% { opacity: 1; transform: scale(1.05); }
+  50% { opacity: 0.8; transform: scale(1); }
+  75% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.8; transform: scale(1); }
 `;
 
 const AlertBanner: React.FC<AlertBannerProps> = ({
@@ -38,7 +41,7 @@ const AlertBanner: React.FC<AlertBannerProps> = ({
 
     fetchAlert();
 
-    const interval = setInterval(fetchAlert, 60000); // Check for updates every 1 minute
+    const interval = setInterval(fetchAlert, 30000); // Check for updates every 1 minute
     return () => clearInterval(interval); // Clear interval on component unmount
   }, [userCity, isAuthenticated]);
 
@@ -59,15 +62,27 @@ const AlertBanner: React.FC<AlertBannerProps> = ({
         color: "white",
         padding: "8px 16px",
         position: "fixed",
-        top: isNavbarSticky ? navbarHeight : 80, // Adjust position based on navbar's stickiness
+        top: isNavbarSticky ? navbarHeight : navbarHeight + 30,
         borderRadius: 8,
-        left: "9rem",
-        right: 0,
+        left: "10%",
+        right: "10%",
         zIndex: 1000,
-        width: "75rem",
+        maxWidth: "80%",
         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-        transition: "top 1.3s ease", // Smooth transition for position change
-        animation: `${blinkAnimation} 1.5s infinite`, // Apply the blink animation
+        transition: "top 1.2s ease",
+        animation: `${blinkAnimation} 2s infinite`,
+        WebkitAnimation: `${blinkAnimation} 2s infinite`,
+        MozAnimation: `${blinkAnimation} 2s infinite`,
+      }}
+      sx={{
+        "@media (max-width: 768px)": {
+          left: "3%",
+          right: "3%",
+        },
+        "@media (max-width: 480px)": {
+          left: "2%",
+          right: "2%",
+        },
       }}
     >
       <Flex align="center" justify="center">

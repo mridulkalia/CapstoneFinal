@@ -2,12 +2,10 @@ import {
   TextInput,
   PasswordInput,
   Paper,
-  Title,
   Text,
   Container,
   Group,
   Button,
-  Divider,
   Anchor,
 } from "@mantine/core";
 import { Helmet } from "react-helmet";
