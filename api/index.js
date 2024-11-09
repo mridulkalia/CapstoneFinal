@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const resourceRouter = require("./routes/resourceRoute");
 const ngorouter = require("./routes/ngoHospitalRoutes");
 const disasterRouter = require("./routes/disasterRoute");
+const campaignRouter=require("./routes/campaignRoutes");
 const app = new express();
 
 database();
@@ -18,12 +19,13 @@ app.use(
     credentials: true,
     origin: ['http://localhost:5173', 'http://localhost:5174'], // Include both ports if needed
   })
-);
+)
 
 app.use("/", router);
 app.use("/", resourceRouter);
 app.use("/", ngorouter);
 app.use("/", disasterRouter);
+app.use("/",campaignRouter);
 
 app.get("/test", (req, res) => {
   res.json("test ok");
