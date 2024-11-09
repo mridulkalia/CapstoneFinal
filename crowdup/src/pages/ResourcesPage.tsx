@@ -8,6 +8,8 @@ import {
   Modal,
   Textarea,
   Group,
+  Badge,
+  Loader,
 } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import axios from "axios";
@@ -32,9 +34,11 @@ const ResourcesPage = () => {
   const [opened, setOpened] = useState(false);
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchResources = async () => {
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/resources");
         const approvedResources = response.data.filter(
@@ -43,6 +47,8 @@ const ResourcesPage = () => {
         setResources(approvedResources);
       } catch (error) {
         console.error("Error fetching resources:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -100,46 +106,74 @@ const ResourcesPage = () => {
       }
     }
   };
-  
 
   return (
-    <Container size="xl">
-      <Paper shadow="sm" p="md">
-        <Title order={2} mb="lg">
+    <Container size="xl" style={{ backgroundColor: "#f4f7fb", paddingBottom: "3rem" }}>
+      <Paper shadow="lg" p="md" style={{ borderRadius: "10px" }}>
+        <Title order={2} mb="lg" align="center">
           Approved Resources
         </Title>
-        <DataTable
-          columns={[
-            {
-              accessor: "fullName",
-              title: "Name",
-              render: (resource: Resource) => (
-                <Text>{`${resource.firstName} ${resource.lastName}`}</Text>
-              ),
-            },
-            { accessor: "email", title: "Email" },
-            { accessor: "phone", title: "Phone" },
-            { accessor: "location", title: "Location" },
-            { accessor: "resourceType", title: "Resource Type" },
-            { accessor: "status", title: "Status" },
-            {
-              accessor: "contact",
-              title: "Contact",
-              render: (resource: Resource) => (
-                <Button onClick={() => openContactModal(resource)} color="blue">
-                  Contact
-                </Button>
-              ),
-            },
-          ]}
-          records={resources}
-          totalRecords={resources.length}
-          recordsPerPage={PAGE_SIZE}
-          page={page}
-          onPageChange={(p) => setPage(p)}
-          highlightOnHover
-          verticalSpacing="sm"
-        />
+        
+        {loading ? (
+          <Group position="center">
+            <Loader size="xl" color="teal" />
+          </Group>
+        ) : (
+          <DataTable
+            columns={[
+              {
+                accessor: "fullName",
+                title: "Name",
+                render: (resource: Resource) => (
+                  <Text weight={500}>{`${resource.firstName} ${resource.lastName}`}</Text>
+                ),
+              },
+              { accessor: "email", title: "Email" },
+              { accessor: "phone", title: "Phone" },
+              { accessor: "location", title: "Location" },
+              { accessor: "resourceType", title: "Resource Type" },
+              {
+                accessor: "status",
+                title: "Status",
+                render: (resource: Resource) => (
+                  <Badge color="green" variant="light">
+                    {resource.status}
+                  </Badge>
+                ),
+              },
+              {
+                accessor: "contact",
+                title: "Contact",
+                render: (resource: Resource) => (
+                  <Button
+                    onClick={() => openContactModal(resource)}
+                    color="gradient"
+                    variant="filled"
+                    size="sm"
+                    radius="xl"
+                  >
+                    Contact
+                  </Button>
+                ),
+              },
+            ]}
+            records={resources}
+            totalRecords={resources.length}
+            recordsPerPage={PAGE_SIZE}
+            page={page}
+            onPageChange={(p) => setPage(p)}
+            highlightOnHover
+            withBorder
+            verticalSpacing="xs"
+            classNames={{
+              root: 'custom-root',  // Apply custom styles to the root element
+              header: 'custom-header', // Add custom class for header styling
+              footer: 'custom-footer', // Optional, if you want to customize footer
+              pagination: 'custom-pagination', // Optional, for pagination styling
+            }}
+            rowClassName="custom-row" // Apply a custom class for the rows
+          />
+        )}
       </Paper>
 
       <Modal
@@ -147,18 +181,26 @@ const ResourcesPage = () => {
         onClose={() => setOpened(false)}
         title="Send Proposal"
         size="lg"
+        centered
       >
         <Textarea
           placeholder="Write your message here..."
           minRows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          style={{ marginBottom: "1rem" }}
         />
         <Group position="right" mt="md">
-          <Button onClick={handleSendProposal} color="blue">
+          <Button
+            onClick={handleSendProposal}
+            color="teal"
+            size="md"
+            radius="xl"
+            style={{ marginRight: "1rem" }}
+          >
             Send Proposal
           </Button>
-          <Button onClick={() => setOpened(false)} color="gray">
+          <Button onClick={() => setOpened(false)} color="gray" size="md" radius="xl">
             Cancel
           </Button>
         </Group>

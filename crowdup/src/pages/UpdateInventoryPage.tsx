@@ -130,14 +130,10 @@ const handleConditionChange = (value: string, index: number) => {
 
   const checkInventory = async () => {
     try {
-      // Send the registration number to the backend to check if inventory exists
       const response = await axios.get(
         `http://localhost:8000/inventory/${hospitalDetails.registrationNumber}`
       );
-      
-      // Check if inventoryItems are available in the response
-      if (response.data && response.data.inventoryItems && response.data.inventoryItems.length > 0) {
-        // If inventory exists, populate the inventoryItems state with the existing data
+        if (response.data && response.data.inventoryItems && response.data.inventoryItems.length > 0) {
         setInventoryItems(response.data.inventoryItems); // Correct reference to inventoryItems
         setSuccess("Inventory found!");
       } else {
