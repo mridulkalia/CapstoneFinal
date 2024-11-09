@@ -298,13 +298,80 @@ exports.getInventory = async (req, res) => {
     return res.status(500).json({ message: "Server error while fetching inventory", error });
   }
 };
+// exports.getAllHospitals = async (req, res) => {
+//   try {
+//     const { sortBy, filterBy, filterValue, page = 1, pageSize = 10 } = req.query;
+//     console.log('Incoming Request:', req.query);
+
+
+//     // Log the query parameters to verify if sortBy is being passed correctly
+//     console.log("Request Query Parameters:", req.query);
+
+//     // Initialize the query object
+//     let query = {};
+
+//     // Apply filter if provided
+//     if (filterBy && filterValue) {
+//       if (filterBy === 'registrationNumber') {
+//         query[filterBy] = filterValue; // Exact match for registration number
+//       } else {
+//         query[filterBy] = { $regex: filterValue, $options: 'i' }; // Case-insensitive partial match
+//       }
+//     }
+
+//     // Handle status filter for pending or approved
+//     if (filterBy === 'status' && filterValue) {
+//       query['status'] = filterValue; // Filter by status (approved/pending)
+//     }
+
+//     // Implement sorting based on sortBy
+//     let sort = {};
+//     if (sortBy) {
+//       const [field, order] = sortBy.split('_');
+//       if (field === 'inventoryScore') {
+//         // Ensure sorting inventoryScore as numeric
+//         sort['inventoryScore'] = order === 'desc' ? -1 : 1; // Sorting in ascending/descending order
+//       } else {
+//         sort[field] = order === 'desc' ? -1 : 1; // Default sorting for other fields
+//       }
+//     }
+
+//     // Fetch hospitals with sorting, filtering, pagination
+//     const hospitals = await NGOHospital.find(query)
+//     .sort({ inventoryScore: sort.inventoryScore }) // Directly sort by inventoryScore
+//     .skip((page - 1) * pageSize)
+//     .limit(parseInt(pageSize));
+
+//     console.log('Before Sorting:', hospitals);
+//     hospitals.sort((a, b) => a.inventoryScore - b.inventoryScore); // Manual sort to see if issue persists
+//     console.log('After Manual Sorting:', hospitals);
+
+//     // Check if hospitals are returned correctly
+
+//     // Log the inventoryScore of each hospital for verification
+//     if (sortBy && sortBy.includes('inventoryScore')) {
+//       console.log('Sorted Hospitals by Inventory Score:');
+//       hospitals.forEach(hospital => {
+//         // console.log(Hospital: ${hospital.name}, Inventory Score: ${hospital.inventoryScore}, Type: ${typeof hospital.inventoryScore});
+//       });
+//     }
+
+//     // Get total hospitals count for pagination
+//     const totalHospitals = await NGOHospital.countDocuments(query);
+//     const totalPages = Math.ceil(totalHospitals / pageSize);
+
+//     res.status(200).json({ hospitals, totalPages });
+//   } catch (error) {
+//     console.error('Error fetching hospitals:', error);
+//     res.status(500).json({ message: 'Error fetching hospitals', error });
+//   }
+// };
 exports.getAllHospitals = async (req, res) => {
   try {
     const { sortBy, filterBy, filterValue, page = 1, pageSize = 10 } = req.query;
     console.log('Incoming Request:', req.query);
 
-
-    // Log the query parameters to verify if sortBy is being passed correctly
+    // Log the query parameters to verify if `sortBy` is being passed correctly
     console.log("Request Query Parameters:", req.query);
 
     // Initialize the query object
@@ -319,7 +386,7 @@ exports.getAllHospitals = async (req, res) => {
       }
     }
 
-    // Handle status filter for pending or approved
+    // Handle status filter for `pending` or `approved`
     if (filterBy === 'status' && filterValue) {
       query['status'] = filterValue; // Filter by status (approved/pending)
     }
@@ -328,31 +395,30 @@ exports.getAllHospitals = async (req, res) => {
     let sort = {};
     if (sortBy) {
       const [field, order] = sortBy.split('_');
-      if (field === 'inventoryScore') {
-        // Ensure sorting inventoryScore as numeric
-        sort['inventoryScore'] = order === 'desc' ? -1 : 1; // Sorting in ascending/descending order
-      } else {
-        sort[field] = order === 'desc' ? -1 : 1; // Default sorting for other fields
+      if (field) {
+        sort[field] = order === 'desc' ? -1 : 1; // Ensure valid sort order
       }
     }
 
-    // Fetch hospitals with sorting, filtering, pagination
-    const hospitals = await NGOHospital.find(query)
-    .sort({ inventoryScore: sort.inventoryScore }) // Directly sort by inventoryScore
-    .skip((page - 1) * pageSize)
-    .limit(parseInt(pageSize));
+    // Only apply `sort()` if the `sort` object has valid keys
+    const hospitalsQuery = NGOHospital.find(query);
+    if (Object.keys(sort).length > 0 && sort[Object.keys(sort)[0]] !== undefined) {
+      hospitalsQuery.sort(sort);
+    }
+
+    const hospitals = await hospitalsQuery
+      .skip((page - 1) * pageSize)
+      .limit(parseInt(pageSize, 10));
 
     console.log('Before Sorting:', hospitals);
     hospitals.sort((a, b) => a.inventoryScore - b.inventoryScore); // Manual sort to see if issue persists
     console.log('After Manual Sorting:', hospitals);
 
     // Check if hospitals are returned correctly
-
-    // Log the inventoryScore of each hospital for verification
     if (sortBy && sortBy.includes('inventoryScore')) {
       console.log('Sorted Hospitals by Inventory Score:');
       hospitals.forEach(hospital => {
-        // console.log(Hospital: ${hospital.name}, Inventory Score: ${hospital.inventoryScore}, Type: ${typeof hospital.inventoryScore});
+        console.log(`Hospital: ${hospital.name}, Inventory Score: ${hospital.inventoryScore}, Type: ${typeof hospital.inventoryScore}`);
       });
     }
 
@@ -366,3 +432,5 @@ exports.getAllHospitals = async (req, res) => {
     res.status(500).json({ message: 'Error fetching hospitals', error });
   }
 };
+
+
