@@ -301,6 +301,14 @@ const LandingNavbar = ({ compressed }: IProps) => {
               </Button>
               <Button
                 component={Link}
+                to="/hospitals-ngos"
+                className={classes.link}
+                {...buttonProps}
+              >
+                Donate Hospitals
+              </Button>
+              <Button
+                component={Link}
                 to="/campaigns"
                 className={classes.link}
                 {...buttonProps}
@@ -327,6 +335,7 @@ const LandingNavbar = ({ compressed }: IProps) => {
                   Inventory
                 </Button>
               )}
+
               {role === "admin" || role === "ngo_hospital" ? (
                 <>
                   <Button

@@ -83,7 +83,7 @@ const AddOrganizationPage = () => {
   };
 
   if (navigateToSignup) {
-    return <Navigate to="/register" />;
+    return <Navigate to="/login-ngo-hospital" />;
   }
 
   return (
@@ -252,15 +252,15 @@ const AddOrganizationPage = () => {
 
             <Button
               variant="outline"
-              color="black"
+              color="dark"
               onClick={() => setNavigateToSignup(true)}
               style={{
                 position: "absolute",
-                top: 20,
-                right: 20,
+                top: 55,
+                right: 40,
               }}
             >
-              Back to Signup
+              Login Organization
             </Button>
             <Group position="center" mt="md">
               <Button

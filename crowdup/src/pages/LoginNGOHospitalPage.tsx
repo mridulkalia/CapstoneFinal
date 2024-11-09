@@ -9,7 +9,6 @@ import {
   Button,
   Divider,
   Anchor,
-  Radio,
 } from "@mantine/core";
 import { Helmet } from "react-helmet";
 import axios from "axios";
@@ -43,21 +42,18 @@ const LoginNGOHospitalPage = () => {
     setLoading(true);
 
     try {
-      console.log("Form data:", formData);
       const response = await axios.post(
         "http://localhost:8000/login-hospital",
         formData
       );
-      console.log(response);
       if (response.data.status === false) {
         console.error("Login failed:", response.data.msg || "Unknown error");
       } else {
         const { city } = response.data.organization;
-        console.log(city);
         localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("role", "ngo_hospital"); // Set role after login success
+        localStorage.setItem("role", "ngo_hospital");
         if (city) {
-          localStorage.setItem("userCity", city); // Save userCity in local storage
+          localStorage.setItem("userCity", city);
         } else {
           console.error("City is not available in the response.");
         }
@@ -76,11 +72,31 @@ const LoginNGOHospitalPage = () => {
         <title>NGO/Hospital Login</title>
       </Helmet>
       <Container size={420} my={40}>
-        <Title align="center" sx={{ fontWeight: 900 }}>
-          Welcome NGO/Hospital!
-        </Title>
-        <Text color="dimmed" size="sm" align="center" mt={5}>
-          Enter your credentials to login
+        <Button
+          variant="outline"
+          color="dark"
+          size="sm"
+          style={{
+            position: "absolute",
+            top: 55,
+            right: 40,
+            padding: "5px 10px",
+            fontSize: "14px",
+          }}
+          onClick={() => navigate("/login")}
+        >
+          Login as User
+        </Button>
+
+        <Text color="#276749" size="sm" align="center" mt={5}>
+          <span style={{ fontWeight: 800, fontSize: "46px" }}>
+            Your Gateway to Aid & Impact
+          </span>
+        </Text>
+        <Text color="#276749" size="sm" align="center" mt={5}>
+          <span style={{ fontWeight: 600, fontSize: "16px" }}>
+            Enter your credentials to login
+          </span>
         </Text>
 
         <Paper
@@ -88,9 +104,13 @@ const LoginNGOHospitalPage = () => {
           shadow="md"
           p={30}
           mt={30}
-          radius="md"
+          radius="lg"
           component="form"
           onSubmit={submitHandler}
+          sx={{
+            backgroundColor: "#eaf6f0",
+            borderColor: "#276749",
+          }}
         >
           <TextInput
             label="Email"
@@ -100,6 +120,7 @@ const LoginNGOHospitalPage = () => {
             onChange={handleChange}
             required
             disabled={loading}
+            styles={{ label: { color: "#276749" } }}
           />
           <TextInput
             label="Registration Number"
@@ -110,6 +131,7 @@ const LoginNGOHospitalPage = () => {
             required
             mt="md"
             disabled={loading}
+            styles={{ label: { color: "#276749" } }}
           />
           <PasswordInput
             label="Password"
@@ -120,6 +142,7 @@ const LoginNGOHospitalPage = () => {
             required
             mt="md"
             disabled={loading}
+            styles={{ label: { color: "#276749" } }}
           />
 
           <Group position="apart" mt="lg">
@@ -127,7 +150,16 @@ const LoginNGOHospitalPage = () => {
               Forgot password?
             </Anchor>
           </Group>
-          <Button type="submit" fullWidth mt="xl" disabled={loading}>
+          <Button
+            type="submit"
+            fullWidth
+            mt="xl"
+            disabled={loading}
+            sx={{
+              backgroundColor: "#276749",
+              "&:hover": { backgroundColor: "#1d5242" },
+            }}
+          >
             {loading ? "Logging in..." : "Login"}
           </Button>
         </Paper>

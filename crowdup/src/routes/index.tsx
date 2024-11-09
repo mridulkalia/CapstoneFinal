@@ -151,12 +151,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/hospitals-ngos",
-    element: (
-      <PrivateRoute>
-        <HospitalListPage />
-      </PrivateRoute>
-    ),
+    element: <PublicLayout />,
     errorElement: <Error404Page />,
+    children: [
+      {
+        path: "",
+        index: true,
+        element: <HospitalListPage />,
+      },
+    ],
   },
   {
     path: "/register-ngo-hospital", // Add the new route
