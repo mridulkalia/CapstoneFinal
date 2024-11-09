@@ -104,7 +104,7 @@ exports.updateNGOHospitalStatus = async (req, res) => {
         },
       });
       await transporter.sendMail({
-        from: "your-email@example.com",
+        from: "crisis_chain@gmail.com",
         to: organization.email,
         subject: "Your Account has been Approved",
         text: `Congratulations! Your account has been approved. Here are your login credentials:\n\nUsername: ${organization.email}\nPassword: ${password}`,
@@ -430,6 +430,48 @@ exports.getAllHospitals = async (req, res) => {
   } catch (error) {
     console.error('Error fetching hospitals:', error);
     res.status(500).json({ message: 'Error fetching hospitals', error });
+  }
+};
+
+
+
+exports.contactHospital = async (req, res) => {
+  try {
+    const { hospitalEmail, message } = req.body;
+
+    // Check if message exists in the request body
+    if (!message || message.trim() === "") {
+      return res.status(400).json({ message: "Message cannot be empty" });
+    }
+
+    // Find the hospital by email (hospitalEmail passed in the body)
+    const hospital = await NGOHospital.findOne({ email: hospitalEmail });
+    if (!hospital) {
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+
+    // Create a transport for sending email
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // You can change this to another email service
+      auth: {
+        user: process.env.EMAIL_USER, // Use environment variables
+        pass: process.env.EMAIL_PASS, // Use environment variables
+      },
+    });
+
+    // Send the email to the hospital
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER, // Your email address
+      to: hospital.email, // The hospital's email address
+      subject: "Contact Us - New Message",
+      text: `You have received a new message from the 'Contact Us' form. Here is the message:\n\n${message}`,
+    });
+
+    // Respond with a success message
+    res.status(200).json({ message: "Message sent successfully to the hospital." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while sending the message." });
   }
 };
 

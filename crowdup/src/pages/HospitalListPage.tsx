@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-    Select,
-    Table,
-    TextInput,
-    Button,
-    Container,
-    Title,
-    Group,
-    Loader,
-    Pagination,
-    Modal,
-    Card,
-    Text,
-    Grid,
-    Divider,
+  Select,
+  Table,
+  TextInput,
+  Button,
+  Container,
+  Title,
+  Group,
+  Loader,
+  Pagination,
+  Modal,
+  Card,
+  Text,
+  Grid,
+  Divider,
+  Textarea,
 } from "@mantine/core";
 import { Badge } from "tabler-icons-react";
 
-
-
 interface Inventory {
-    items: Item[]; // Array of inventory items (Item objects)
-  }
-  
+  items: Item[]; // Array of inventory items (Item objects)
+}
 
 interface Hospital {
   name: string;
@@ -42,17 +40,16 @@ interface Hospital {
 }
 
 interface Item {
-    itemName: string;
-    category: string;
-    quantity: number;
-    unit: string;
-    condition: string;
-    priority: number;
-  }
-  
+  itemName: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  condition: string;
+  priority: number;
+}
 
 const HospitalListPage: React.FC = () => {
-    const [loadingInventory, setLoadingInventory] = useState<boolean>(false);
+  const [loadingInventory, setLoadingInventory] = useState<boolean>(false);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [sortOption, setSortOption] = useState<string | null>("");
   const [filterField, setFilterField] = useState<string | null>("");
@@ -68,6 +65,7 @@ const HospitalListPage: React.FC = () => {
     null
   ); // State to store inventory
   const [modalOpened, setModalOpened] = useState<boolean>(false);
+  const [contactFormOpened, setContactFormOpened] = useState<boolean>(false);
 
   const pageSize = 14;
 
@@ -95,6 +93,77 @@ const HospitalListPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+  const ContactForm = ({ selectedHospital }: { selectedHospital: any }) => {
+    const [message, setMessage] = useState(""); // Message content
+    const [subject, setSubject] = useState("Hospital Inquiry"); // Subject of the email
+
+    // Function to handle the form submission
+    const handleContactUs = async () => {
+        if (selectedHospital) {
+          try {
+            // Prepare the payload for sending the email
+            const payload = {
+              hospitalEmail: selectedHospital.email, // Ensure this matches the field in the backend
+              message: message, // Message from the form
+            };
+      
+            console.log("Sending email with payload:", payload); // Log the payload to verify the data
+      
+            const response = await axios.post(
+              "http://localhost:8000/send-email", // Ensure this endpoint is correct in the backend
+              payload
+            );
+      
+            if (response.status === 200) {
+              alert("Email sent successfully to the hospital!");
+              setMessage(""); // Reset the message after successful submission
+              setModalOpened(false); // Close the modal
+            } else {
+              alert("Failed to send email.");
+            }
+          } catch (error) {
+            console.error("Detailed error:", error); // This will print the full error
+            if (error instanceof Error) {
+              alert(`Error sending email: ${error.message}`);
+            } else {
+              alert('Error sending email');
+            }
+          }
+        }
+      };
+      
+
+    return (
+      <Modal
+        opened={contactFormOpened}
+        onClose={() => setContactFormOpened(false)}
+        title="Contact Hospital"
+        centered
+      >
+        {selectedHospital && (
+          <>
+            <TextInput
+              label="Subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              placeholder="Enter the subject"
+            />
+            <Textarea
+              label="Your Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Write your message here..."
+              minRows={4}
+              required
+            />
+            <Group position="right" mt="md">
+              <Button onClick={handleContactUs}>Send Message</Button>
+            </Group>
+          </>
+        )}
+      </Modal>
+    );
   };
 
   const handleSort = (column: string) => {
@@ -320,7 +389,9 @@ const HospitalListPage: React.FC = () => {
                   {selectedHospital.city}, {selectedHospital.country}
                 </Text>
                 <Group position="center" mt="xs">
-                  <Badge color="green">{selectedHospital.inventoryScore} Inventory Score</Badge>
+                  <Badge color="green">
+                    {selectedHospital.inventoryScore} Inventory Score
+                  </Badge>
                 </Group>
               </Grid.Col>
 
@@ -352,7 +423,8 @@ const HospitalListPage: React.FC = () => {
                 </Text>
                 {loadingInventory ? (
                   <Loader size="lg" color="teal" />
-                ) : selectedInventory?.items && selectedInventory.items.length > 0 ? (
+                ) : selectedInventory?.items &&
+                  selectedInventory.items.length > 0 ? (
                   <Table striped highlightOnHover>
                     <thead>
                       <tr>
@@ -385,8 +457,8 @@ const HospitalListPage: React.FC = () => {
               {/* Action Buttons */}
               <Grid.Col span={12} mt="xl">
                 <Group position="center">
-                  <Button variant="outline" color="blue" size="lg">
-                    Contact Us
+                  <Button onClick={() => setContactFormOpened(true)}>
+                    Contact Now
                   </Button>
                   <Button variant="filled" color="teal" size="lg">
                     Donate Now
@@ -394,6 +466,7 @@ const HospitalListPage: React.FC = () => {
                 </Group>
               </Grid.Col>
             </Grid>
+            <ContactForm selectedHospital={selectedHospital} />
           </Card>
         )}
       </Modal>

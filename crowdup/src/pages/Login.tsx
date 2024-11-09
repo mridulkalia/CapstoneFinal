@@ -16,6 +16,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
+import { showSuccess } from "../utils/notifications";
 
 const LoginPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -61,6 +62,7 @@ const LoginPage = () => {
         console.error("Login failed:", response.data.msg || "Unknown error");
       } else {
         localStorage.setItem("role", formData.profile);
+        showSuccess("Login successful! Redirecting...");
         login(formData.profile);
         navigate("/");
       }
