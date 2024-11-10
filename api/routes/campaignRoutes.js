@@ -2,6 +2,7 @@ const express = require("express");
 const {
   createCampaign,
   getAllCampaigns,
+  getCampaignById,
 } = require("../controllers/campaignController");
 
 const router = express.Router();
@@ -29,5 +30,7 @@ router.post(
 
 // GET route for fetching all campaigns
 router.get("/campaigns", getAllCampaigns);
+
+router.get("/campaigns/:id", getCampaignById);
 
 module.exports = router;

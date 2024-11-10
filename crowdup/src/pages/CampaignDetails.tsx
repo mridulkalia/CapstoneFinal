@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { ICampaign } from "../types";
-import campaignsData from "../data/Campaigns.json";
 import {
   Accordion,
   ActionIcon,
@@ -48,8 +48,10 @@ import { notifications } from "@mantine/notifications";
 
 const CampaignDetailsPage = (): JSX.Element => {
   dayjs.extend(customParseFormat);
-  const { id } = useParams();
-  const [campaign, setCampaign] = useState<ICampaign>();
+  const { id } = useParams<{ id: string }>(); // Get campaign ID from URL params
+  const [campaign, setCampaign] = useState<ICampaign | undefined>(undefined);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
   const [opened, { open, close }] = useDisclosure(false);
   const [donateOpened, { open: donateOpen, close: donateClose }] =
     useDisclosure(false);
@@ -77,9 +79,37 @@ const CampaignDetailsPage = (): JSX.Element => {
   const iconSize = 18;
 
   useEffect(() => {
-    setCampaign(campaignsData.data.find((_) => _.id === id));
+    // Fetch campaign data from backend
+    const fetchCampaign = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/campaigns/${id}`
+        );
+        console.log(response);
+        setCampaign(response.data.campaign); // Set campaign data
+        setLoading(false);
+        setError(null); // Reset error state
+      } catch (error) {
+        setError("Failed to load campaign details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCampaign();
   }, [id]);
 
+  if (loading) {
+    return <Text>Loading...</Text>; // Display loading state
+  }
+
+  if (error) {
+    return <Text color="red">{error}</Text>; // Display error message if fetch fails
+  }
+  // console.log(campaign?.title);
+  const formattedDeadline = dayjs(campaign?.deadline).format(
+    "YYYY-MM-DD HH:mm"
+  );
   return (
     <>
       <Helmet>
@@ -94,7 +124,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                 <Stack>
                   <Card padding="md" shadow="sm">
                     <Card.Section>
-                      <Image src={campaign?.mainImage} height={480} />
+                      <Image src={campaign?.profilePicture} height={480} />
                     </Card.Section>
                     <Stack mt="md">
                       <Title>{campaign?.title}</Title>
@@ -104,20 +134,22 @@ const CampaignDetailsPage = (): JSX.Element => {
                           <UnstyledButton component={Anchor}>
                             <Flex gap="xs" align="center">
                               <Avatar
-                                src={campaign?.createdByImage}
+                                src={campaign?.profilePicture}
                                 radius="xl"
                                 size="sm"
                               />
-                              <Text size="sm">{campaign?.createdBy}</Text>
+                              <Text size="sm">
+                                {campaign?.contactPersonName}
+                              </Text>
                             </Flex>
                           </UnstyledButton>
                           <IconSeparator size={18} />
                           <Text component={Anchor} size="sm">
-                            {campaign?.country}
+                            {campaign?.location?.country}
                           </Text>
                           <IconSeparator size={18} />
                           <Text component={Anchor} size="sm">
-                            {campaign?.category}
+                            {campaign?.campaignType}
                           </Text>
                         </Flex>
                       ) : (
@@ -127,20 +159,24 @@ const CampaignDetailsPage = (): JSX.Element => {
                             <UnstyledButton component={Anchor}>
                               <Flex gap="xs" align="center">
                                 <Avatar
-                                  src={campaign?.createdByImage}
+                                  src={campaign?.profilePicture}
                                   radius="xl"
                                   size="sm"
                                 />
-                                <Text size="sm">{campaign?.createdBy}</Text>
+                                <Text size="sm">
+                                  {campaign?.contactPersonName}
+                                </Text>
                               </Flex>
                             </UnstyledButton>
                           </Flex>
                           <Group>
                             <Text size="sm">
-                              Location - <Anchor>{campaign?.country}</Anchor>
+                              Location -{" "}
+                              <Anchor>{campaign?.location?.country}</Anchor>
                             </Text>
                             <Text size="sm">
-                              Category - <Anchor>{campaign?.category}</Anchor>
+                              Category -{" "}
+                              <Anchor>{campaign?.campaignType}</Anchor>
                             </Text>
                           </Group>
                         </Stack>
@@ -152,17 +188,25 @@ const CampaignDetailsPage = (): JSX.Element => {
                           <Divider />
                           <Flex align="flex-end" gap="sm">
                             <Title {...titleProps} align="center">
-                              {campaign?.amountRaised}
+                              {campaign?.amount}
                             </Title>
                             <Text fw={500} align="center" color="dimmed">
-                              raised of {campaign?.goal}
+                              raised of {campaign?.targetAmount}
                             </Text>
                           </Flex>
-                          <Progress value={campaign?.daysLeft} size="md" />
+
+                          <Progress
+                            value={
+                              (campaign?.amount / campaign?.targetAmount) * 100
+                            }
+                            size="md"
+                          />
                           <Flex justify="space-between">
-                            <Text fw={500}>{campaign?.daysLeft}% Funded</Text>
                             <Text fw={500}>
-                              {campaign?.contributors} Donors
+                              {formattedDeadline} - {campaign?.amount} Funded
+                            </Text>
+                            <Text fw={500}>
+                              {campaign?.contactPersonName} Donors
                             </Text>
                           </Flex>
                           <Flex align="center" gap="xs">
@@ -182,7 +226,6 @@ const CampaignDetailsPage = (): JSX.Element => {
                               title={`${
                                 following ? "Unfollow" : "Follow"
                               } this campaign`}
-                              // variant={following ? 'filled' : 'subtle'}
                               size="lg"
                               color={"secondary"}
                               onClick={() => {
@@ -197,12 +240,10 @@ const CampaignDetailsPage = (): JSX.Element => {
                                     root: {
                                       backgroundColor: theme.colors.blue[6],
                                       borderColor: theme.colors.blue[6],
-
                                       "&::before": {
                                         backgroundColor: theme.white,
                                       },
                                     },
-
                                     title: { color: theme.white },
                                     description: { color: theme.white },
                                     closeButton: {
@@ -226,6 +267,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                       )}
                     </Stack>
                   </Card>
+
                   <Paper {...paperProps}>
                     <Text {...subTitleProps} mb="sm">
                       Organizer
@@ -254,15 +296,17 @@ const CampaignDetailsPage = (): JSX.Element => {
                     <Paper {...paperProps}>
                       <Stack spacing="sm">
                         <Title {...titleProps} align="center">
-                          {campaign?.amountRaised}
+                          {campaign?.amount}
                         </Title>
                         <Text fw={500} align="center" color="dimmed">
-                          raised of {campaign?.goal}
+                          raised of {campaign?.targetAmount}
                         </Text>
-                        <Progress value={campaign?.daysLeft} size="md" />
+                        <Progress value={campaign?.deadline} size="md" />
                         <Flex justify="space-between">
-                          <Text fw={500}>{campaign?.daysLeft}% Funded</Text>
-                          <Text fw={500}>{campaign?.contributors} Donors</Text>
+                          <Text fw={500}>{campaign?.deadline}% Funded</Text>
+                          <Text fw={500}>
+                            {campaign?.contactPersonName} Donors
+                          </Text>
                         </Flex>
                         <Button size="xl" onClick={donateOpen}>
                           Donate
@@ -297,10 +341,8 @@ const CampaignDetailsPage = (): JSX.Element => {
                                 root: {
                                   backgroundColor: theme.colors.blue[6],
                                   borderColor: theme.colors.blue[6],
-
                                   "&::before": { backgroundColor: theme.white },
                                 },
-
                                 title: { color: theme.white },
                                 description: { color: theme.white },
                                 closeButton: {
@@ -325,14 +367,14 @@ const CampaignDetailsPage = (): JSX.Element => {
                     <Accordion defaultValue="customization" variant="separated">
                       <Accordion.Item value="customization">
                         <Accordion.Control>
-                          When will {campaign?.createdBy} get my payment?
+                          When will {campaign?.contactPersonName} get my
+                          payment?
                         </Accordion.Control>
                         <Accordion.Panel>
                           Your payment is sent directly to Dora so it
                           immediately helps their campaign.
                         </Accordion.Panel>
                       </Accordion.Item>
-
                       <Accordion.Item value="flexibility">
                         <Accordion.Control>
                           How secure is the payment process?
@@ -340,7 +382,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                         <Accordion.Panel>
                           Payments are made in a highly-secure environment. We
                           use industry leading technology (such as SSL) to keep
-                          your information safe and encrypted
+                          your information safe and encrypted.
                         </Accordion.Panel>
                       </Accordion.Item>
                     </Accordion>
