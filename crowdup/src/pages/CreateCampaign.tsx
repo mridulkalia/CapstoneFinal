@@ -102,8 +102,8 @@ const CreateCampaignPage = () => {
     const formData = new FormData();
 
     // Validate location
-    const location = { country: values.country, city: values.city };
-    if (!location.country || !location.city) {
+    const location = { country: values?.country, city: values?.city };
+    if (!location?.country || !location?.city) {
       setLocationError("Both country and city are required for location.");
       return; // Stop form submission if location is incomplete
     }
@@ -425,7 +425,7 @@ const CreateCampaignPage = () => {
                       Location
                     </Text>
                     <Text size="md" weight={500}>
-                      {form.values.country}, {form.values.city}
+                      {form.values?.country}, {form.values?.city}
                     </Text>
                   </Box>
 
