@@ -244,6 +244,12 @@ const CreateCampaignPage = () => {
                     {...form.getInputProps("city")}
                     required
                   />
+                  <Textarea
+                    label="Description"
+                    placeholder="Enter campaign description"
+                    {...form.getInputProps("description")}
+                    required
+                  />
                 </SimpleGrid>
                 {locationError && <Text color="red">{locationError}</Text>}
               </Paper>
