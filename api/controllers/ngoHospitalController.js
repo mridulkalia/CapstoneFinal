@@ -173,27 +173,32 @@ const priorityMapping = {
 
 exports.updateInventory = async (req, res) => {
   try {
-    const { registrationNumber, inventoryData } = req.body; // Registration number and inventory data
+    const { registrationNumber, inventoryData } = req.body;
 
-    // Step 1: Validate the incoming data
+    // Validate the incoming data
     if (
       !registrationNumber ||
       !Array.isArray(inventoryData) ||
       inventoryData.length === 0
     ) {
       return res.status(400).json({
-        message:
-          "Invalid data. Please provide registrationNumber and a valid inventoryData array.",
+        message: "Invalid data. Please provide registrationNumber and a valid inventoryData array.",
       });
     }
 
-    // Step 2: Find the hospital by registration number
+    // Find the hospital by registration number
     const hospital = await NGOHospital.findOne({ registrationNumber });
     if (!hospital) {
       return res.status(404).json({ message: "Hospital not found" });
     }
 
-    // Step 3: Define item priority, category weights, and calculate the total score
+    // Find existing inventory or create a new one
+    let existingInventory = await inventorySchema.findOne({ registrationNumber });
+    if (!existingInventory) {
+      existingInventory = new Inventory({ registrationNumber });
+    }
+
+    // Define item priority, category weights, and calculate the total score
     const priorityMapping = {
       high: 10,
       medium: 5,
@@ -216,7 +221,6 @@ exports.updateInventory = async (req, res) => {
     let totalScore = 0;
 
     for (const item of inventoryData) {
-      // Validate individual item
       if (
         !item.itemName ||
         !item.category ||
@@ -225,17 +229,16 @@ exports.updateInventory = async (req, res) => {
         !item.condition
       ) {
         return res.status(400).json({
-          message:
-            "Each item must have itemName, category, quantity, unit, and condition.",
+          message: "Each item must have itemName, category, quantity, unit, and condition.",
         });
       }
-      const priority = priorityMapping[item.priority] || 0; // Default to 0 if priority is not recognized
-      const categoryWeight = categoryWeights[item.category.toLowerCase()] || 1; // Default to 1 if category is not recognized
-      const conditionMultiplier =
-        conditionImpact[item.condition.toLowerCase()] || 1; // Default to 1 if condition is not recognized
-      const quantityScore =
-        item.quantity * categoryWeight * conditionMultiplier;
+
+      const priority = priorityMapping[item.priority] || 0;
+      const categoryWeight = categoryWeights[item.category.toLowerCase()] || 1;
+      const conditionMultiplier = conditionImpact[item.condition.toLowerCase()] || 1;
+      const quantityScore = item.quantity * categoryWeight * conditionMultiplier;
       const itemScore = priority + quantityScore;
+
       const inventoryItem = {
         itemName: item.itemName,
         category: item.category,
@@ -246,16 +249,17 @@ exports.updateInventory = async (req, res) => {
         weightOrVolume: item.weightOrVolume || "",
         purchaseDate: item.purchaseDate || null,
         cost: item.cost || 0,
-        priority: priority, // Store numeric priority for easier calculation
-        categoryWeight: categoryWeight,
-        conditionMultiplier: conditionMultiplier,
-        quantityScore: quantityScore,
-        itemScore: itemScore, // Store the individual item score
+        priority,
+        categoryWeight,
+        conditionMultiplier,
+        quantityScore,
+        itemScore,
       };
 
       inventoryItems.push(inventoryItem);
-      totalScore += itemScore; // Add the item's score to the total score
+      totalScore += itemScore;
     }
+
     existingInventory.items = inventoryItems;
     existingInventory.totalScore = totalScore;
     await existingInventory.save();
@@ -264,16 +268,13 @@ exports.updateInventory = async (req, res) => {
     hospital.inventoryScore = totalScore;
     await hospital.save();
 
-    // Step 7: Respond to the client
     res.status(200).json({
       message: "Inventory updated and score calculated successfully.",
       data: existingInventory,
     });
   } catch (error) {
     console.error("Error updating inventory:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while updating the inventory." });
+    res.status(500).json({ message: "An error occurred while updating the inventory." });
   }
 };
 
