@@ -49,11 +49,15 @@ const UserCard = ({ ...others }: IProps) => {
   if (error) {
     return <Text color="red">{error}</Text>; // Show error message if there was a failure fetching data
   }
+  const imageUrl = `http://localhost:8000/${campaign?.profilePicture.replace(
+    /\\/g,
+    "/"
+  )}`;
 
   return (
     <Paper {...others}>
       <Flex gap="lg" align="center">
-        <Avatar src={userData.avatar} size={120} radius={120} />
+        <Avatar src={imageUrl} size={120} radius={120} />
         <Stack spacing="xs" align="flex-start">
           <Text ta="center" fz="lg" weight={500}>
             {campaign?.organizationName}

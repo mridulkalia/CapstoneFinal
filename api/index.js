@@ -20,6 +20,7 @@ app.use(
     origin: ["http://localhost:5173", "http://localhost:5174"], // Include both ports if needed
   })
 );
+app.use("/uploads", express.static("uploads"));
 
 app.use("/", router);
 app.use("/", resourceRouter);

@@ -45,7 +45,6 @@ const CampaignsPage = (): JSX.Element => {
   const boxProps: BoxProps = {
     mt: matchesMobile ? 4 : 24,
     mb: matchesMobile ? 4 : 48,
-    py: matchesMobile ? 16 : 24,
   };
 
   const titleProps: TitleProps = {

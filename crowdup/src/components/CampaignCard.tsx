@@ -78,6 +78,9 @@ const CampaignCard = ({ data, showActions }: IProps) => {
     to: `/campaigns/${_id}`,
     rel: "noopener noreferrer",
   };
+  const imageUrl = profilePicture
+    ? `http://localhost:8000/${profilePicture.replace(/\\/g, "/")}`
+    : "path/to/fallback-image.jpg";
 
   return (
     <Card
@@ -90,11 +93,7 @@ const CampaignCard = ({ data, showActions }: IProps) => {
     >
       <Card.Section>
         <Image
-          src={
-            profilePicture
-              ? profilePicture.replace("\\", "/")
-              : "/default-image.jpg"
-          } // Provide a default image if profilePicture is undefined
+          src={imageUrl}
           height={280}
           className={classes.image}
           alt={`${title} image`}

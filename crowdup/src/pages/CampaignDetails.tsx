@@ -110,6 +110,12 @@ const CampaignDetailsPage = (): JSX.Element => {
   const formattedDeadline = dayjs(campaign?.deadline).format(
     "YYYY-MM-DD HH:mm"
   );
+  const imageUrl = `http://localhost:8000/${campaign?.profilePicture.replace(
+    /\\/g,
+    "/"
+  )}`;
+  // console.log(imageUrl);
+
   return (
     <>
       <Helmet>
@@ -124,7 +130,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                 <Stack>
                   <Card padding="md" shadow="sm">
                     <Card.Section>
-                      <Image src={campaign?.profilePicture} height={480} />
+                      <Image src={imageUrl} height={480} />
                     </Card.Section>
                     <Stack mt="md">
                       <Title>{campaign?.title}</Title>
@@ -133,11 +139,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                           <Text size="sm">Fundraise campaign created by</Text>
                           <UnstyledButton component={Anchor}>
                             <Flex gap="xs" align="center">
-                              <Avatar
-                                src={campaign?.profilePicture}
-                                radius="xl"
-                                size="sm"
-                              />
+                              <Avatar src={imageUrl} radius="xl" size="sm" />
                               <Text size="sm">
                                 {campaign?.contactPersonName}
                               </Text>
@@ -158,11 +160,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                             <Text size="sm">Fundraise campaign created by</Text>
                             <UnstyledButton component={Anchor}>
                               <Flex gap="xs" align="center">
-                                <Avatar
-                                  src={campaign?.profilePicture}
-                                  radius="xl"
-                                  size="sm"
-                                />
+                                <Avatar src={imageUrl} radius="xl" size="sm" />
                                 <Text size="sm">
                                   {campaign?.contactPersonName}
                                 </Text>
@@ -301,11 +299,19 @@ const CampaignDetailsPage = (): JSX.Element => {
                         <Text fw={500} align="center" color="dimmed">
                           raised of {campaign?.targetAmount}
                         </Text>
-                        <Progress value={campaign?.deadline} size="md" />
+                        <Progress
+                          value={
+                            (campaign?.amount / campaign?.targetAmount) * 100
+                          }
+                          size="md"
+                        />
                         <Flex justify="space-between">
-                          <Text fw={500}>{campaign?.deadline}% Funded</Text>
                           <Text fw={500}>
-                            {campaign?.contactPersonName} Donors
+                            {formattedDeadline} <br />
+                            Funded - {campaign?.amount}
+                          </Text>
+                          <Text fw={500}>
+                            Donors - {campaign?.contactPersonName}
                           </Text>
                         </Flex>
                         <Button size="xl" onClick={donateOpen}>
