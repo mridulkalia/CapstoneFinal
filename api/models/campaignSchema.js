@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const campaignSchema = new mongoose.Schema(
   {
@@ -32,15 +32,7 @@ const campaignSchema = new mongoose.Schema(
         required: true,
       },
     },
-    socialLinks: [
-      {
-        platform: { 
-          type: String, 
-          enum: ['Facebook', 'Whatsapp', 'LinkedIn', 'Twitter', 'Youtube', 'Other'] 
-        },
-        link: { type: String, required: true },
-      },
-    ],
+
     profilePicture: {
       type: String, // This could store a URL or a file path to the uploaded image
     },
@@ -50,8 +42,8 @@ const campaignSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['active', 'inactive', 'completed'],
-      default: 'active',
+      enum: ["active", "inactive", "completed"],
+      default: "active",
     },
   },
   {
@@ -59,4 +51,4 @@ const campaignSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('Campaign', campaignSchema);
+module.exports = mongoose.model("Campaign", campaignSchema);

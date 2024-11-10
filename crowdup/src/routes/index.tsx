@@ -22,6 +22,7 @@ import LoginNGOHospitalPage from "../pages/LoginNGOHospitalPage";
 import ResourcesPage from "../pages/ResourcesPage";
 import InventoryPage from "../pages/UpdateInventoryPage";
 import HospitalListPage from "../pages/HospitalListPage";
+import { createCampaign } from "../services/campaignService";
 
 const router = createBrowserRouter([
   {
@@ -191,7 +192,7 @@ const router = createBrowserRouter([
       {
         path: "",
         index: true,
-        element: <CreateCampaignPage />,
+        element: <CreateCampaignPage createCampaign={createCampaign} />,
       },
     ],
   },
