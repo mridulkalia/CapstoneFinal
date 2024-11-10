@@ -32,9 +32,34 @@ const campaignSchema = new mongoose.Schema(
         required: true,
       },
     },
-
     profilePicture: {
       type: String, // This could store a URL or a file path to the uploaded image
+    },
+    organizerContact: {
+      type: String,
+      required: true,
+    },
+    socialMediaLinks: {
+      type: [String], // Array of URLs
+    },
+    campaignType: {
+      type: String,
+      enum: ["Non-Profit", "Commercial", "Personal", "Government"], // Example options
+      required: true,
+      default: 'Personal'
+    },
+    organizationName: {
+      type: String,
+      required: true,
+    },
+    organizationEmail: {
+      type: String,
+      required: true,
+      match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
+    },
+    contactPersonName: {
+      type: String,
+      required: true,
     },
     createdAt: {
       type: Date,
