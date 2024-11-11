@@ -80,8 +80,7 @@ const router = createBrowserRouter([
       {
         path: "",
         index: true,
-        // element: <HowItWorksPage />,
-        element:<Donate/>
+        element: <Donate />,
       },
     ],
   },

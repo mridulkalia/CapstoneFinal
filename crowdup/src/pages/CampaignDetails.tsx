@@ -45,6 +45,7 @@ import { Helmet } from "react-helmet";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { notifications } from "@mantine/notifications";
+import { Link } from "react-router-dom";
 
 const CampaignDetailsPage = (): JSX.Element => {
   dayjs.extend(customParseFormat);
@@ -53,8 +54,8 @@ const CampaignDetailsPage = (): JSX.Element => {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
   const [opened, { open, close }] = useDisclosure(false);
-  const [donateOpened, { open: donateOpen, close: donateClose }] =
-    useDisclosure(false);
+  // const [donateOpened, { open: donateOpen, close: donateClose }] =
+  //   useDisclosure(false);
   const [following, setFollowing] = useToggle();
   const matchesMobile = useMediaQuery("(max-width: 768px)");
 
@@ -208,9 +209,10 @@ const CampaignDetailsPage = (): JSX.Element => {
                             </Text>
                           </Flex>
                           <Flex align="center" gap="xs">
-                            <Button onClick={donateOpen} fullWidth>
-                              Donate
-                            </Button>
+                            <Link to="/donate">
+                              <Button fullWidth>Donate</Button>
+                            </Link>
+
                             <ActionIcon
                               variant="subtle"
                               onClick={open}
@@ -314,9 +316,9 @@ const CampaignDetailsPage = (): JSX.Element => {
                             Donors - {campaign?.contactPersonName}
                           </Text>
                         </Flex>
-                        <Button size="xl" onClick={donateOpen}>
-                          Donate
-                        </Button>
+                        <Link to="/donate">
+                          <Button size="xl">Donate</Button>
+                        </Link>
                         <Button
                           leftIcon={<IconShare size={iconSize} />}
                           variant="outline"
@@ -415,12 +417,12 @@ const CampaignDetailsPage = (): JSX.Element => {
           campaign={campaign}
           iconSize={iconSize}
         />
-        <DonationDrawer
+        {/* <DonationDrawer
           campaign={campaign}
-          opened={donateOpened}
-          onClose={donateClose}
+          // opened={donateOpened}
+          // onClose={donateClose}
           iconSize={iconSize}
-        />
+        /> */}
       </Box>
     </>
   );
