@@ -23,6 +23,7 @@ import ResourcesPage from "../pages/ResourcesPage";
 import InventoryPage from "../pages/UpdateInventoryPage";
 import HospitalListPage from "../pages/HospitalListPage";
 import { createCampaign } from "../services/campaignService";
+import Donate from "../pages/Donate";
 
 const router = createBrowserRouter([
   {
@@ -72,14 +73,15 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/how-it-works",
+    path: "/donate",
     element: <PublicLayout />,
     errorElement: <Error404Page />,
     children: [
       {
         path: "",
         index: true,
-        element: <HowItWorksPage />,
+        // element: <HowItWorksPage />,
+        element:<Donate/>
       },
     ],
   },
@@ -192,7 +194,7 @@ const router = createBrowserRouter([
       {
         path: "",
         index: true,
-        element: <CreateCampaignPage createCampaign={createCampaign} />,
+        element: <CreateCampaignPage />,
       },
     ],
   },
