@@ -5,6 +5,7 @@ export const checkCityAlert = async (city) => {
     const response = await axios.get(`http://localhost:8000/disasters/alert`, {
       params: { city },
     });
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching city alert:", error);

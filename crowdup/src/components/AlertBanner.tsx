@@ -3,7 +3,6 @@ import { checkCityAlert } from "../services/disasterService";
 import { useAuth } from "../context/AuthProvider";
 import { AlertCircle } from "tabler-icons-react";
 import { Box, Text, Flex, Center } from "@mantine/core";
-import { keyframes } from "@emotion/react";
 
 interface AlertBannerProps {
   userCity: string;
@@ -11,13 +10,13 @@ interface AlertBannerProps {
 }
 
 // Define the blinking animation
-const blinkAnimation = keyframes`
-  0% { opacity: 0.8; transform: scale(1); }
-  25% { opacity: 1; transform: scale(1.05); }
-  50% { opacity: 0.8; transform: scale(1); }
-  75% { opacity: 1; transform: scale(1.05); }
-  100% { opacity: 0.8; transform: scale(1); }
-`;
+// const blinkAnimation = keyframes`
+//   0% { opacity: 0.8; transform: scale(1); }
+//   25% { opacity: 1; transform: scale(1.05); }
+//   50% { opacity: 0.8; transform: scale(1); }
+//   75% { opacity: 1; transform: scale(1.05); }
+//   100% { opacity: 0.8; transform: scale(1); }
+// `;
 
 const AlertBanner: React.FC<AlertBannerProps> = ({
   userCity,
@@ -42,12 +41,11 @@ const AlertBanner: React.FC<AlertBannerProps> = ({
     fetchAlert();
 
     const interval = setInterval(fetchAlert, 30000); // Check for updates every 1 minute
-    return () => clearInterval(interval); // Clear interval on component unmount
+    return () => clearInterval(interval);
   }, [userCity, isAuthenticated]);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if navbar is sticky based on scroll position
       setIsNavbarSticky(window.scrollY > navbarHeight);
     };
 
@@ -70,9 +68,9 @@ const AlertBanner: React.FC<AlertBannerProps> = ({
         maxWidth: "80%",
         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
         transition: "top 1.2s ease",
-        animation: `${blinkAnimation} 2s infinite`,
-        WebkitAnimation: `${blinkAnimation} 2s infinite`,
-        MozAnimation: `${blinkAnimation} 2s infinite`,
+        // animation: `${blinkAnimation} 2s infinite`,
+        // WebkitAnimation: `${blinkAnimation} 2s infinite`,
+        // MozAnimation: `${blinkAnimation} 2s infinite`,
       }}
       sx={{
         "@media (max-width: 768px)": {
