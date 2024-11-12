@@ -316,7 +316,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                             Donors - {campaign?.contactPersonName}
                           </Text>
                         </Flex>
-                        <Link to="/donate">
+                        <Link to={`/campaigns/${campaign._id}/donate`}>
                           <Button style={{ width: "100% " }} size="xl">
                             Donate
                           </Button>

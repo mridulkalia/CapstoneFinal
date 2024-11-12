@@ -48,7 +48,6 @@ const Donate: React.FC = (): JSX.Element => {
 
   const { id: campaignId } = useParams();  // Extract the campaignId from URL params
   console.log("Campaign ID from URL:", campaignId);  // Ensure this logs the correct ID
-  
   useEffect(() => {
     const initWeb3 = async () => {
       setLoading(true);
@@ -85,27 +84,50 @@ const Donate: React.FC = (): JSX.Element => {
   const handleTransfer = async () => {
     if (contract && web3 && senderAddress) {
       try {
+        // Perform the Ethereum transfer
         await contract.methods.transfer(recipient).send({
           from: senderAddress, // Use the entered sender address
           value: web3.utils.toWei(amount.toString(), "ether"),
           gas: 300000,
         });
-
-        // Record transaction
+  
+        // Create a new transaction object
         const newTransaction: Transaction = {
-          recipient,
-          amount,
-          date: new Date().toLocaleString(),
+          recipient: recipient,
+          amount: amount,
+          date: new Date().toLocaleString(), // Ensure date is formatted as a string
         };
-        setTransactions([...transactions, newTransaction]);
-
-        // Update balance after the transfer
-        await updateBalance();
+  
+        // API request to save the transaction in the database
+        const response = await fetch(`http://localhost:8000/campaigns/${campaignId}/transactions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            donorAddress: senderAddress,
+            amount: amount,
+          }),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log("Transaction added:", result.message);
+  
+          // Update the local transaction state
+          setTransactions([...transactions, newTransaction]);
+  
+          // Update balance after the transfer
+          await updateBalance();
+        } else {
+          throw new Error('Failed to add transaction');
+        }
       } catch (err) {
         console.error("Error during transfer:", err);
       }
     }
   };
+  
 
   const updateBalance = async () => {
     if (contract && web3 && senderAddress) {
