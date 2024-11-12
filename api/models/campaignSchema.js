@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const transactionSchema = new mongoose.Schema({
+  donorAddress: {
+    type: String,
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now, // Automatically sets the date of the transaction
+  },
+});
+
 const campaignSchema = new mongoose.Schema(
   {
     title: {
@@ -39,9 +54,6 @@ const campaignSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    socialMediaLinks: {
-      type: [String], // Array of URLs
-    },
     campaignType: {
       type: String,
       enum: ["Non-Profit", "Commercial", "Personal", "Government"], // Example options
@@ -61,10 +73,11 @@ const campaignSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    ethereumAddress: {
+      type: String,
+      required: true, // Ensure this is filled when creating a campaign
     },
+    transactions: [transactionSchema], // Embed an array of transactions
     status: {
       type: String,
       enum: ["active", "inactive", "completed"],

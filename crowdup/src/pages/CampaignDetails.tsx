@@ -209,7 +209,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                             </Text>
                           </Flex>
                           <Flex align="center" gap="xs">
-                            <Link to="/donate">
+                            <Link to={`/campaigns/${campaign._id}/donate`}>
                               <Button fullWidth>Donate</Button>
                             </Link>
 

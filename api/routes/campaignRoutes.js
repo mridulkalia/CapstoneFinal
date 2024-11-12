@@ -3,6 +3,9 @@ const {
   createCampaign,
   getAllCampaigns,
   getCampaignById,
+  addTransaction,
+  getTransactionsByCampaignId,
+  getAllTransactions,
 } = require("../controllers/campaignController");
 
 const router = express.Router();
@@ -32,5 +35,10 @@ router.post(
 router.get("/campaigns", getAllCampaigns);
 
 router.get("/campaigns/:id", getCampaignById);
+
+router.post("/campaigns/:id/transactions", addTransaction);
+// router.get("/campaigns/transactions", getAllTransactions);
+router.get("/campaigns/:id/transactions", getTransactionsByCampaignId);
+
 
 module.exports = router;
