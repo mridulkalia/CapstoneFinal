@@ -34,13 +34,7 @@ import {
   IconShare,
 } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery, useToggle } from "@mantine/hooks";
-import {
-  BackButton,
-  DonationDrawer,
-  NotFound,
-  ShareModal,
-  UserCard,
-} from "../components";
+import { BackButton, NotFound, ShareModal, UserCard } from "../components";
 import { Helmet } from "react-helmet";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -107,6 +101,16 @@ const CampaignDetailsPage = (): JSX.Element => {
   if (error) {
     return <Text color="red">{error}</Text>; // Display error message if fetch fails
   }
+
+  const calculateTotalAmount = (campaign: any) => {
+    return (
+      parseFloat(campaign?.amount) +
+      campaign?.transactions.reduce(
+        (total: any, txn: any) => total + parseFloat(txn.amount),
+        0
+      )
+    );
+  };
   // console.log(campaign?.title);
   const formattedDeadline = dayjs(campaign?.deadline).format(
     "YYYY-MM-DD HH:mm"
@@ -187,7 +191,7 @@ const CampaignDetailsPage = (): JSX.Element => {
                           <Divider />
                           <Flex align="flex-end" gap="sm">
                             <Title {...titleProps} align="center">
-                              {campaign?.amount}
+                              {calculateTotalAmount(campaign)}
                             </Title>
                             <Text fw={500} align="center" color="dimmed">
                               raised of {campaign?.targetAmount}
@@ -196,7 +200,9 @@ const CampaignDetailsPage = (): JSX.Element => {
 
                           <Progress
                             value={
-                              (campaign?.amount / campaign?.targetAmount) * 100
+                              (calculateTotalAmount(campaign) /
+                                campaign?.targetAmount) *
+                              100
                             }
                             size="md"
                           />
@@ -296,21 +302,23 @@ const CampaignDetailsPage = (): JSX.Element => {
                     <Paper {...paperProps}>
                       <Stack spacing="sm">
                         <Title {...titleProps} align="center">
-                          {campaign?.amount}
+                          {calculateTotalAmount(campaign)}
                         </Title>
                         <Text fw={500} align="center" color="dimmed">
                           raised of {campaign?.targetAmount}
                         </Text>
                         <Progress
                           value={
-                            (campaign?.amount / campaign?.targetAmount) * 100
+                            (calculateTotalAmount(campaign) /
+                              campaign?.targetAmount) *
+                            100
                           }
                           size="md"
                         />
                         <Flex justify="space-between">
                           <Text fw={500}>
                             {formattedDeadline} <br />
-                            Funded - {campaign?.amount}
+                            Funded - {calculateTotalAmount(campaign)}
                           </Text>
                           <Text fw={500}>
                             Donors - {campaign?.contactPersonName}
