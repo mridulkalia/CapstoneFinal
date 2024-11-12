@@ -108,7 +108,7 @@ const Donate: React.FC = (): JSX.Element => {
             },
             body: JSON.stringify({
               donorAddress: senderAddress,
-              amount: amount * 217227,
+              amount: amount,
             }),
           }
         );

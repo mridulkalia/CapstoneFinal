@@ -28,7 +28,7 @@ import {
   Title,
   TitleProps,
   UnstyledButton,
-  Table
+  Table,
 } from "@mantine/core";
 import {
   IconChevronDown,
@@ -53,10 +53,7 @@ interface Transaction {
   amount: number;
   date: string; // or Date, if you handle it as a Date object
   _id: string;
-
 }
-
-
 
 const CampaignDetailsPage = (): JSX.Element => {
   dayjs.extend(customParseFormat);
@@ -67,25 +64,25 @@ const CampaignDetailsPage = (): JSX.Element => {
   const [opened, { open, close }] = useDisclosure(false);
   const [donationsOpened, { open: openDonations, close: closeDonations }] =
     useDisclosure(false);
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [transactionsLoading, setTransactionsLoading] = useState(false);
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const [sortAsc, setSortAsc] = useState<boolean>(true);
-    const matchesMobile = useMediaQuery("(max-width: 768px)");
-  
-    const fetchTransactions = async () => {
-      try {
-        setTransactionsLoading(true);
-        const response = await axios.get(
-          `http://localhost:8000/campaigns/${campaignId}/transactions`
-        );
-        setTransactions(response.data.transactions);
-      } catch (error) {
-        console.error("Failed to fetch transactions:", error);
-      } finally {
-        setTransactionsLoading(false);
-      }
-    };
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [sortAsc, setSortAsc] = useState<boolean>(true);
+  const matchesMobile = useMediaQuery("(max-width: 768px)");
+
+  const fetchTransactions = async () => {
+    try {
+      setTransactionsLoading(true);
+      const response = await axios.get(
+        `http://localhost:8000/campaigns/${campaignId}/transactions`
+      );
+      setTransactions(response.data.transactions);
+    } catch (error) {
+      console.error("Failed to fetch transactions:", error);
+    } finally {
+      setTransactionsLoading(false);
+    }
+  };
 
   // const [donateOpened, { open: donateOpen, close: donateClose }] =
   //   useDisclosure(false);
@@ -96,7 +93,6 @@ const CampaignDetailsPage = (): JSX.Element => {
     shadow: "sm",
   };
 
-  
   const titleProps: TitleProps = {
     size: 32,
     weight: 700,
@@ -111,8 +107,6 @@ const CampaignDetailsPage = (): JSX.Element => {
   };
   const { id: campaignId } = useParams(); // Extract the campaignId from URL params
   console.log("Campaign ID from URL:", campaignId); // Ensure this logs the correct ID
-
-
 
   const iconSize = 18;
 
@@ -141,7 +135,9 @@ const CampaignDetailsPage = (): JSX.Element => {
   );
 
   const sortedTransactions = filteredTransactions.sort((a, b) =>
-    sortAsc ? new Date(a.date).getTime() - new Date(b.date).getTime() : new Date(b.date).getTime() - new Date(a.date).getTime()
+    sortAsc
+      ? new Date(a.date).getTime() - new Date(b.date).getTime()
+      : new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,8 +181,8 @@ const CampaignDetailsPage = (): JSX.Element => {
   //   "/"
   // )}`;
   const imageUrl = campaign?.profilePicture
-  ? `http://localhost:8000/${campaign.profilePicture.replace(/\\/g, "/")}`
-  : ''; // Default to an empty string or a fallback image if profilePicture is undefined
+    ? `http://localhost:8000/${campaign.profilePicture.replace(/\\/g, "/")}`
+    : ""; // Default to an empty string or a fallback image if profilePicture is undefined
 
   // console.log(imageUrl);
 
@@ -515,76 +511,74 @@ const CampaignDetailsPage = (): JSX.Element => {
         /> */}
       </Box>
       <Modal
-  opened={donationsOpened}
-  onClose={closeDonations}
-  title={
-    <Text
-      weight={600}
-      size="lg"
-      color="green"
-      sx={{ borderBottom: '2px solid', paddingBottom: '5px' }}
-    >
-      Donations History
-    </Text>
-  }
-  size="xl"
-  centered
-  overlayProps={{
-    opacity: 0.55,
-    blur: 3,
-  }}
-  transitionProps={{
-    transition: 'scale',
-    duration: 300,
-    timingFunction: 'ease-in-out',
-  }}
-  styles={{
-    header: {
-      backgroundColor: '#f0f4ff',
-      padding: '16px',
-      borderRadius: '8px 8px 0 0',
-    },
-    body: {
-      padding: '20px',
-    },
-  }}
->
-  <ScrollArea style={{ maxHeight: '400px' }}>
-    {/* Replace with your table or content */}
-    <Text align="center" color="dimmed" size="sm">
-      This section contains detailed information about past donations.
-    </Text>
-    <Divider my="sm" />
-    <Table highlightOnHover striped withBorder>
-      <thead>
-        <tr>
-          <th>Donor Address</th>
-          <th>Amount</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {transactions.length > 0 ? (
-          transactions.map((transaction) => (
-            <tr key={transaction._id}>
-              <td>{transaction.donorAddress}</td>
-              <td>{transaction.amount}</td>
-              <td>{new Date(transaction.date).toLocaleDateString()}</td>
-            </tr>
-          ))
-        ) : (
-          <tr>
-            <td colSpan={3} align="center">
-              No transactions found.
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </Table>
-  </ScrollArea>
-</Modal>
-
-
+        opened={donationsOpened}
+        onClose={closeDonations}
+        title={
+          <Text
+            weight={600}
+            size="lg"
+            color="green"
+            sx={{ borderBottom: "2px solid", paddingBottom: "5px" }}
+          >
+            Donations History
+          </Text>
+        }
+        size="xl"
+        centered
+        overlayProps={{
+          opacity: 0.55,
+          blur: 3,
+        }}
+        transitionProps={{
+          transition: "scale",
+          duration: 300,
+          timingFunction: "ease-in-out",
+        }}
+        styles={{
+          header: {
+            backgroundColor: "#f0f4ff",
+            padding: "16px",
+            borderRadius: "8px 8px 0 0",
+          },
+          body: {
+            padding: "20px",
+          },
+        }}
+      >
+        <ScrollArea style={{ maxHeight: "400px" }}>
+          {/* Replace with your table or content */}
+          <Text align="center" color="dimmed" size="sm">
+            This section contains detailed information about past donations.
+          </Text>
+          <Divider my="sm" />
+          <Table highlightOnHover striped withBorder>
+            <thead>
+              <tr>
+                <th>Donor Address</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.length > 0 ? (
+                transactions.map((transaction) => (
+                  <tr key={transaction._id}>
+                    <td>{transaction.donorAddress}</td>
+                    <td>{transaction.amount}</td>
+                    <td>{new Date(transaction.date).toLocaleDateString()}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={3} align="center">
+                    No transactions found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </ScrollArea>
+      </Modal>
     </>
   );
 };
