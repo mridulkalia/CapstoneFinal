@@ -24,6 +24,7 @@ import InventoryPage from "../pages/UpdateInventoryPage";
 import HospitalListPage from "../pages/HospitalListPage";
 import { createCampaign } from "../services/campaignService";
 import Donate from "../pages/Donate";
+import { DonationDrawer } from "../components";
 
 const router = createBrowserRouter([
   {
@@ -95,13 +96,17 @@ const router = createBrowserRouter([
         errorElement: <Error404Page />,
       },
       {
-        path: ":id",
+        path: ":id",  // This should match for the campaign details page
         element: <CampaignDetailsPage />,
         errorElement: <DetailError404Page />,
       },
+      {
+        path: ":id/donate",  // This should match for the donate page
+        element: <Donate />,
+        errorElement: <DetailError404Page />,
+      },
     ],
-  },
-
+  },  
   {
     path: "/dashboard",
     element: (

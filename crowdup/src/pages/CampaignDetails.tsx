@@ -209,8 +209,8 @@ const CampaignDetailsPage = (): JSX.Element => {
                             </Text>
                           </Flex>
                           <Flex align="center" gap="xs">
-                            <Link to="/donate">
-                              <Button fullWidth>Donate</Button>
+                          <Link to={`/campaigns/${campaign._id}/donate`}>
+                          <Button fullWidth>Donate</Button>
                             </Link>
 
                             <ActionIcon
@@ -316,8 +316,8 @@ const CampaignDetailsPage = (): JSX.Element => {
                             Donors - {campaign?.contactPersonName}
                           </Text>
                         </Flex>
-                        <Link to="/donate">
-                          <Button size="xl">Donate</Button>
+                        <Link to={`/campaigns/${campaign._id}/donate`}>
+                        <Button size="xl">Donate</Button>
                         </Link>
                         <Button
                           leftIcon={<IconShare size={iconSize} />}

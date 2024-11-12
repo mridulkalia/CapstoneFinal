@@ -48,6 +48,7 @@ interface CampaignData {
   campaignType: string;
   organizationName: string;
   organizationEmail: string;
+  ethereumAddress:String;
 }
 
 const CreateCampaignPage = () => {
@@ -71,6 +72,7 @@ const CreateCampaignPage = () => {
       campaignType: "",
       organizationName: "",
       organizationEmail: "",
+      ethereumAddress:"",
     },
   });
 
@@ -125,6 +127,8 @@ const CreateCampaignPage = () => {
       campaignType: values.campaignType,
       organizationName: values.organizationName,
       organizationEmail: values.organizationEmail,
+      ethereumAddress:values.ethereumAddress,
+      
     };
 
     // Append fields to FormData
@@ -271,6 +275,12 @@ const CreateCampaignPage = () => {
                     label="Target Amount"
                     placeholder="Enter target amount"
                     {...form.getInputProps("targetAmount")}
+                    required
+                  />
+                  <TextInput
+                    label="Ethereum Address"
+                    placeholder="Enter Ethereum address"
+                    {...form.getInputProps("ethereumAddress")}
                     required
                   />
                   <FileInput
