@@ -186,9 +186,24 @@ const CreateCampaignPage = () => {
       <Helmet>
         <title>Create Campaign</title>
       </Helmet>
-      <Box sx={{ padding: "40px 20px", backgroundColor: theme.colors.gray[0] }}>
-        <Container size="lg" my={36}>
-          <Title {...titleProps}>Create Your Campaign</Title>
+      <Box
+        sx={{
+          padding: "40px 20px",
+          backgroundColor: theme.colors.gray[0],
+        }}
+      >
+        <Container size="lg" my={5}>
+          <Title
+            style={{
+              color: "#278A41",
+              fontSize: 50,
+              marginBottom: 20,
+              marginTop: -25,
+            }}
+            {...titleProps}
+          >
+            Create Your Campaign
+          </Title>
 
           <Stepper
             active={active}
@@ -199,7 +214,8 @@ const CreateCampaignPage = () => {
               margin: "auto",
               padding: "10px",
               borderRadius: "8px",
-              backgroundColor: theme.colors.blue[0],
+              backgroundColor: "#EAF6F0",
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.466)",
             }}
           >
             {/* Step 1: Basic Info */}
@@ -207,7 +223,9 @@ const CreateCampaignPage = () => {
               label="Get Started"
               description="Fill in basic campaign info"
             >
-              <Title {...titleProps}>Campaign Information</Title>
+              <Title style={{ color: "#278A41", fontSize: 35 }} {...titleProps}>
+                Campaign Information
+              </Title>
               <Paper {...paperProps}>
                 <SimpleGrid
                   cols={2}
@@ -260,7 +278,9 @@ const CreateCampaignPage = () => {
               label="Donation Info"
               description="Set your donation goals"
             >
-              <Title {...titleProps}>Donation Information</Title>
+              <Title style={{ color: "#278A41", fontSize: 35 }} {...titleProps}>
+                Donation Information
+              </Title>
               <Paper {...paperProps}>
                 <SimpleGrid
                   cols={2}
@@ -302,7 +322,9 @@ const CreateCampaignPage = () => {
               label="Organizer Info"
               description="Provide your organizer details"
             >
-              <Title {...titleProps}>Organizer Information</Title>
+              <Title style={{ color: "#278A41", fontSize: 35 }} {...titleProps}>
+                Organizer Information
+              </Title>
               <Paper {...paperProps}>
                 <SimpleGrid
                   cols={2}
@@ -342,7 +364,9 @@ const CreateCampaignPage = () => {
               label="Review"
               description="Final review before submitting"
             >
-              <Title {...titleProps}>Review Campaign</Title>
+              <Title style={{ color: "#278A41", fontSize: 35 }} {...titleProps}>
+                Review Campaign
+              </Title>
               <Paper {...paperProps}>
                 <Stack spacing="lg">
                   <Text weight={500} size="lg">

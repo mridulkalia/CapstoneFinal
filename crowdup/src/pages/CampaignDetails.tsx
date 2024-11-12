@@ -317,7 +317,9 @@ const CampaignDetailsPage = (): JSX.Element => {
                           </Text>
                         </Flex>
                         <Link to="/donate">
-                          <Button size="xl">Donate</Button>
+                          <Button style={{ width: "100% " }} size="xl">
+                            Donate
+                          </Button>
                         </Link>
                         <Button
                           leftIcon={<IconShare size={iconSize} />}

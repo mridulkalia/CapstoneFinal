@@ -144,12 +144,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/inventory",
-    element: (
-      <PrivateRoute>
-        <InventoryPage />
-      </PrivateRoute>
-    ),
+    element: <PublicLayout />,
     errorElement: <Error404Page />,
+    children: [
+      {
+        path: "",
+        index: true,
+        element: <InventoryPage />,
+      },
+    ],
   },
   {
     path: "/hospitals-ngos",
