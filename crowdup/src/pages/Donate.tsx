@@ -12,6 +12,7 @@ import {
   Loader,
 } from "@mantine/core";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 // Smart contract address
 const CONTRACT_ADDRESS = "0xDA2cCf12f5C48ab6989B1F142b61b1eCf16041D7";
@@ -38,14 +39,42 @@ const Donate: React.FC = (): JSX.Element => {
   const [contract, setContract] = useState<any>(null);
   const [senderAddress, setSenderAddress] = useState<string>(""); // User's own address
   const [recipient, setRecipient] = useState<string>("");
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<string>("");
   const [balance, setBalance] = useState<number>(0);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [campaign, setCampaign] = useState<Campaign | null>(null);
+  const [inrValue, setInrValue] = useState<string>(""); // INR value
+  const [conversionRate, setConversionRate] = useState<number>(217227);
 
-  const { id: campaignId } = useParams(); // Extract the campaignId from URL params
-  console.log("Campaign ID from URL:", campaignId); // Ensure this logs the correct ID
+  const { id: campaignId } = useParams();
+
+  console.log("Campaign ID from URL:", campaignId);
+
+  useEffect(() => {
+    const fetchConversionRate = async () => {
+      try {
+        const response = await axios.get(
+          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr"
+        );
+        setConversionRate(response.data.ethereum.inr);
+      } catch (error) {
+        console.error("Error fetching conversion rate:", error);
+      }
+    };
+
+    fetchConversionRate();
+  }, []);
+
+  useEffect(() => {
+    const numericAmount = parseFloat(amount); // Convert to number for calculations
+    if (!isNaN(numericAmount)) {
+      setInrValue((numericAmount * conversionRate).toFixed(2));
+    } else {
+      setInrValue("0.00");
+    }
+  }, [amount, conversionRate]);
+
   useEffect(() => {
     const initWeb3 = async () => {
       setLoading(true);
@@ -82,7 +111,8 @@ const Donate: React.FC = (): JSX.Element => {
   }, [campaignId]);
 
   const handleTransfer = async () => {
-    if (contract && web3 && senderAddress) {
+    const numericAmount = parseFloat(amount);
+    if (contract && web3 && senderAddress && !isNaN(numericAmount)) {
       try {
         // Perform the Ethereum transfer
         await contract.methods.transfer(recipient).send({
@@ -94,7 +124,7 @@ const Donate: React.FC = (): JSX.Element => {
         // Create a new transaction object
         const newTransaction: Transaction = {
           recipient: recipient,
-          amount: amount,
+          amount: numericAmount,
           date: new Date().toLocaleString(), // Ensure date is formatted as a string
         };
 
@@ -108,7 +138,7 @@ const Donate: React.FC = (): JSX.Element => {
             },
             body: JSON.stringify({
               donorAddress: senderAddress,
-              amount: amount,
+              amount: numericAmount * conversionRate,
             }),
           }
         );
@@ -187,9 +217,14 @@ const Donate: React.FC = (): JSX.Element => {
                 label="Amount (ETH)"
                 placeholder="Enter amount in ETH"
                 value={amount}
-                onChange={(e) => setAmount(parseFloat(e.target.value))}
-                style={{ marginBottom: "1rem" }}
+                onChange={(e) => setAmount(e.target.value)}
+                style={{ marginBottom: "1rem", flexGrow: 1 }}
               />
+              <span
+                style={{ marginLeft: "1rem", fontSize: "1rem", color: "#666" }}
+              >
+                {inrValue ? `≈ ₹${inrValue}` : "₹0.00"}
+              </span>
             </div>
 
             <Button
@@ -215,7 +250,7 @@ const Donate: React.FC = (): JSX.Element => {
                 Account Balance: <b>{balance} ETH</b>
               </Text>
               <Text align="center" size="sm" color="dimmed">
-                <b>1 ETH = Rs 2,17,227</b>
+                <b>1 ETH = Rs {conversionRate.toLocaleString()}</b>
               </Text>
             </div>
           </div>
