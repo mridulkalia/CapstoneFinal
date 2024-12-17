@@ -12,6 +12,7 @@ import {
   RegisterResourcePage,
   SignupPage,
   DisasterInfoPage,
+  AdminForestFirePredictor,
   // Import the new component
 } from "../pages";
 import { AuthLayout, DashboardLayout, PublicLayout } from "../layout";
@@ -96,17 +97,17 @@ const router = createBrowserRouter([
         errorElement: <Error404Page />,
       },
       {
-        path: ":id",  // This should match for the campaign details page
+        path: ":id", // This should match for the campaign details page
         element: <CampaignDetailsPage />,
         errorElement: <DetailError404Page />,
       },
       {
-        path: ":id/donate",  // This should match for the donate page
+        path: ":id/donate", // This should match for the donate page
         element: <Donate />,
         errorElement: <DetailError404Page />,
       },
     ],
-  },  
+  },
   {
     path: "/dashboard",
     element: (
@@ -132,6 +133,18 @@ const router = createBrowserRouter([
         path: "",
         index: true,
         element: <RegisterResourcePage />,
+      },
+    ],
+  },
+  {
+    path: "/crisis",
+    element: <PublicLayout />,
+    errorElement: <Error404Page />,
+    children: [
+      {
+        path: "",
+        index: true,
+        element: <AdminForestFirePredictor />,
       },
     ],
   },

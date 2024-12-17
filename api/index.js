@@ -8,6 +8,7 @@ const resourceRouter = require("./routes/resourceRoute");
 const ngorouter = require("./routes/ngoHospitalRoutes");
 const disasterRouter = require("./routes/disasterRoute");
 const campaignRouter = require("./routes/campaignRoutes");
+const crisisroutes = require("./routes/crisisRoutes");
 const app = new express();
 
 database();
@@ -27,6 +28,7 @@ app.use("/", resourceRouter);
 app.use("/", ngorouter);
 app.use("/", disasterRouter);
 app.use("/", campaignRouter);
+app.use("/", crisisroutes);
 
 app.get("/test", (req, res) => {
   res.json("test ok");

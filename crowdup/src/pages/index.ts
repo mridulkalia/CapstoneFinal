@@ -10,6 +10,7 @@ import DashboardPage from "./Dashboard";
 import CreateCampaignPage from "./CreateCampaign";
 import RegisterResourcePage from "./RegisterResource.tsx";
 import DisasterInfoPage from "./DisasterPreparedness.tsx";
+import AdminForestFirePredictor from "./AdminForestFirePredictor.tsx";
 
 export {
   HomePage,
@@ -24,4 +25,5 @@ export {
   CreateCampaignPage,
   DisasterInfoPage,
   RegisterResourcePage,
+  AdminForestFirePredictor,
 };
