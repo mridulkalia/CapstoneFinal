@@ -36,17 +36,15 @@ const login = async (req, res) => {
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
 
-    // Check if the request is for the admin
     if (
       profile === "admin" &&
       email === adminEmail &&
       password === adminPassword
     ) {
-      // Admin login successful without checking database
       const token = jwt.sign(
         {
           email: adminEmail,
-          id: "admin", // or any identifier for admin
+          id: "admin",
           profile: "admin",
         },
         process.env.SECRET,
@@ -109,25 +107,24 @@ const getUserByEmail = async (req, res) => {
 
     // Validate the email address
     if (!email) {
-      return res.status(400).json({ message: 'Email is required' });
+      return res.status(400).json({ message: "Email is required" });
     }
 
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Respond with user data, excluding sensitive information
     res.status(200).json({ userId: user._id });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error while fetching user' });
+    res.status(500).json({ message: "Server error while fetching user" });
   }
 };
 const logout = (req, res) => {
   res.cookie("token", "").json(true);
 };
 
-
-module.exports = { register, login, logout ,getUserByEmail };
+module.exports = { register, login, logout, getUserByEmail };

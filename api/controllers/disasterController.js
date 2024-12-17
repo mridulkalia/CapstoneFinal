@@ -1,5 +1,4 @@
-// controllers/disasterController.js
-const Disaster = require("../models/disasterSchema"); // Adjust path as needed
+const Disaster = require("../models/disasterSchema");
 
 // Get all disasters
 exports.getDisasters = async (req, res) => {
