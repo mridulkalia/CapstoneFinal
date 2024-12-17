@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Card,
@@ -56,6 +56,9 @@ const AdminForestFirePredictor: React.FC = () => {
   const [weatherDetails, setWeatherDetails] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [predictionResult, setPredictionResult] = useState(null);
+  const [probab, setProbab] = useState(null);
+
 
   const fetchWeatherDetails = async (state: string) => {
     try {
@@ -66,7 +69,8 @@ const AdminForestFirePredictor: React.FC = () => {
         temperature: response.data.temperature,
         humidity: response.data.humidity,
         precipitation: response.data.precipitation,
-        ozone: response.data.ozone, // Added Ozone (O3)
+        oxygen: response.data.ozone, // Added Ozone (O3)
+        windSpeed: response.data.windSpeed || 0, // Default to 0 if windSpeed is not available
       });
       setError(null);
     } catch (err) {
@@ -81,23 +85,34 @@ const AdminForestFirePredictor: React.FC = () => {
       setError("Weather details are required for prediction.");
       return;
     }
-
+  
     try {
-      const response = await axios.post(
-        "http://localhost:8000/predict-forest-fire",
-        weatherDetails
-      );
-      setSuccess(
-        "Forest fire prediction completed successfully! Check the results."
-      );
+      // Prepare the data to send as URLSearchParams (application/x-www-form-urlencoded)
+      const requestBody = new URLSearchParams();
+      requestBody.append("temperature", parseFloat(weatherDetails.temperature).toString());
+      requestBody.append("humidity", parseFloat(weatherDetails.humidity).toString());
+      requestBody.append("oxygen", parseFloat(weatherDetails.oxygen || "0").toString()); // Default to 0 if not available
+  
+      console.log("Sending request with body:", requestBody.toString());
+
+      // Send the request to the backend with application/x-www-form-urlencoded
+      const response = await axios.post("http://localhost:8000/predict", requestBody, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded", // Specify x-www-form-urlencoded content type
+        },
+      });
+
+      setPredictionResult(response.data.prediction);
+      setProbab(response.data.probability)
+      setSuccess("Forest fire prediction completed successfully! Check the results.");
       setError(null);
-      console.log(response.data); // Log prediction results for debugging
     } catch (err) {
       setError("Failed to predict forest fire. Please try again.");
       setSuccess(null);
       console.error(err);
     }
   };
+  
 
   return (
     <Container size="md" py="xl">
@@ -152,7 +167,12 @@ const AdminForestFirePredictor: React.FC = () => {
                 />
                 <TextInput
                   label="Oxygen (µg/m³)" //
-                  value={weatherDetails.ozone || "Unavailable"}
+                  value={weatherDetails.oxygen || "Unavailable"}
+                  disabled
+                />
+                <TextInput
+                  label="Wind Speed (km/h)" //
+                  value={weatherDetails.windSpeed || "Unavailable"}
                   disabled
                 />
               </Stack>
@@ -165,6 +185,13 @@ const AdminForestFirePredictor: React.FC = () => {
               Predict Forest Fire
             </Button>
           </Group>
+          {predictionResult && (
+            <Card shadow="sm" padding="md" withBorder>
+              <Text align="center" size="lg" weight={500}>
+                Prediction: {predictionResult } with probabilty { probab}
+              </Text>
+            </Card>
+          )}
         </Stack>
       </Card>
     </Container>

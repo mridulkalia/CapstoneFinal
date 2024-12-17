@@ -1,62 +1,68 @@
 const fetch = require("node-fetch");
+const bodyParser = require('body-parser');
 
-// Handle the prediction request
+
+
 exports.getCrisisPrediction = async (req, res) => {
-  const { temperature, oxygen, humidity, windSpeed, precipitation } = req.body;
+  try {
+    // Extract form-data from the request
+    const { temperature, oxygen, humidity } = req.body;
+    console.log(temperature)
+    console.log(oxygen)
+    console.log(humidity)
 
-  // Validate required inputs
-  if (!temperature || !humidity) {
-    return res
-      .status(400)
-      .json({
+    // Validate required inputs
+    if (!temperature || !humidity) {
+      return res.status(400).json({
         message: "Temperature and humidity are required for prediction.",
       });
-  }
+    }
 
-  try {
-    // Prepare the request data for the ML model
-    const requestBody = {
-      temperature,
-      oxygen: oxygen || "N/A", // Default if oxygen is unavailable
-      humidity,
-      windSpeed: windSpeed || 0,
-      precipitation: precipitation || 0,
-    };
+    // Prepare the data for the ML model
+    const requestBody = new URLSearchParams({
+      temperature: temperature.toString(),
+      oxygen: oxygen?.toString() || "0", // Default to 0 if not provided
+      humidity: humidity.toString(),
+    });
+
+    console.log(requestBody)
+    
+
+    console.log("Request Body to ML Model:", requestBody.toString());
 
     // Send the request to the ML model
     const response = await fetch("http://127.0.0.1:5000/predict", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: requestBody.toString(), // URL-encoded format for the ML model
     });
 
     if (!response.ok) {
-      return res
-        .status(500)
-        .json({ message: "Error interacting with the ML model." });
+      console.error("Error from ML model:", response.statusText);
+      return res.status(500).json({ message: "Error interacting with the ML model." });
     }
 
     // Parse response from the ML model server
     const data = await response.text();
-    const prediction = data.includes("danger")
-      ? "Your Forest is in Danger."
-      : "Your Forest is Safe.";
-    const probability =
-      data.match(/Probability of fire occurring is (\d+\.\d+)/)?.[1] || "N/A";
+    console.log("Response from ML Model:", data);
 
+    // Determine prediction message and probability
+    const prediction = data.includes("danger")
+      ? "Your Forest is in Danger "
+      : "Your Forest is Safe ";
+    const probability = data;
+
+    // Send response back to the client
     res.status(200).json({
       prediction,
       probability,
       message: "Prediction received successfully.",
     });
   } catch (error) {
-    console.error("Error during request to ML model:", error);
-    res
-      .status(500)
-      .json({ message: "Error during request to ML model", error });
+    console.error("Error during request to ML model:", error); // Log the error
+    res.status(500).json({ message: "Error during request to ML model", error });
   }
 };
-
 // Fetch weather and O3 details for a given state
 exports.getWeatherDetails = async (req, res) => {
   const { state } = req.params;
