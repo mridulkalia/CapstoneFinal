@@ -62,7 +62,12 @@ const AdminForestFirePredictor: React.FC = () => {
       const response = await axios.get(
         `http://localhost:8000/weather/${state}`
       );
-      setWeatherDetails(response.data);
+      setWeatherDetails({
+        temperature: response.data.temperature,
+        humidity: response.data.humidity,
+        precipitation: response.data.precipitation,
+        ozone: response.data.ozone, // Added Ozone (O3)
+      });
       setError(null);
     } catch (err) {
       setWeatherDetails(null);
@@ -141,13 +146,13 @@ const AdminForestFirePredictor: React.FC = () => {
                   disabled
                 />
                 <TextInput
-                  label="Wind Speed (km/h)"
-                  value={weatherDetails.windSpeed || ""}
+                  label="Precipitation (mm)"
+                  value={weatherDetails.precipitation || "No rain"}
                   disabled
                 />
                 <TextInput
-                  label="Precipitation (mm)"
-                  value={weatherDetails.precipitation || ""}
+                  label="Oxygen (µg/m³)" //
+                  value={weatherDetails.ozone || "Unavailable"}
                   disabled
                 />
               </Stack>

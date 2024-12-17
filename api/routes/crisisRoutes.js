@@ -7,5 +7,6 @@ router.post("/predict", crisisChainController.getCrisisPrediction);
 
 // Route to check if a city has an active alert
 router.get("/city-alert", crisisChainController.checkCityAlert);
+router.get("/weather/:state", crisisChainController.getWeatherDetails);
 
 module.exports = router;
