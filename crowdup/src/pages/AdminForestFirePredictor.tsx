@@ -12,6 +12,7 @@ import {
   Loader,
 } from "@mantine/core";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const statesAndUTs = [
   "Andhra Pradesh",
@@ -60,6 +61,7 @@ const AdminForestFirePredictor: React.FC = () => {
   const [predictionResult, setPredictionResult] = useState(null);
   const [probab, setProbab] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const fetchWeatherDetails = async (state: string) => {
     try {
@@ -128,7 +130,7 @@ const AdminForestFirePredictor: React.FC = () => {
     <Container size="md" py="xl">
       <Card shadow="sm" padding="lg" radius="md">
         <Text align="center" size="xl" weight={700} mb="md">
-          Admin Forest Fire Predictor
+          Forest Fire Predictor
         </Text>
 
         {error && (
@@ -144,19 +146,19 @@ const AdminForestFirePredictor: React.FC = () => {
         )}
 
         <Stack spacing="md">
-        <Select
-  label="Select State/Union Territory"
-  placeholder="Choose a state/UT"
-  data={statesAndUTs.map((state) => ({ value: state, label: state }))}
-  value={selectedState}
-  onChange={(value) => {
-    setSelectedState(value);
-    if (value) fetchWeatherDetails(value);
-  }}
-  searchable
-  dropdownPosition="bottom" // Ensures dropdown always opens below the input
-  withinPortal // Renders the dropdown outside parent containers to avoid clipping
-/>
+          <Select
+            label="Select State/Union Territory"
+            placeholder="Choose a state/UT"
+            data={statesAndUTs.map((state) => ({ value: state, label: state }))}
+            value={selectedState}
+            onChange={(value) => {
+              setSelectedState(value);
+              if (value) fetchWeatherDetails(value);
+            }}
+            searchable
+            dropdownPosition="bottom" // Ensures dropdown always opens below the input
+            withinPortal // Renders the dropdown outside parent containers to avoid clipping
+          />
 
           {weatherDetails && (
             <Card shadow="sm" padding="md" radius="md" withBorder>
@@ -196,6 +198,12 @@ const AdminForestFirePredictor: React.FC = () => {
               disabled={!weatherDetails || loading}
             >
               {loading ? <Loader size="xs" /> : "Predict Forest Fire"}
+            </Button>
+            <Button
+              onClick={() => navigate("/dashboard")}
+              disabled={!weatherDetails || loading}
+            >
+              {loading ? <Loader size="xs" /> : "Raise Alert"}
             </Button>
           </Group>
 

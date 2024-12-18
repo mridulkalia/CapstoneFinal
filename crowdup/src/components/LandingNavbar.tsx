@@ -293,6 +293,14 @@ const LandingNavbar = ({ compressed }: IProps) => {
             >
               <Button
                 component={Link}
+                to="/crisis"
+                className={classes.link}
+                {...buttonProps}
+              >
+                Predict Disaster
+              </Button>
+              <Button
+                component={Link}
                 to="/disaster-preparedness"
                 className={classes.link}
                 {...buttonProps}
