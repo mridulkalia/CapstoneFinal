@@ -9,6 +9,7 @@ import {
   Notification,
   Group,
   Text,
+  Loader,
 } from "@mantine/core";
 import axios from "axios";
 
@@ -58,7 +59,7 @@ const AdminForestFirePredictor: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [predictionResult, setPredictionResult] = useState(null);
   const [probab, setProbab] = useState(null);
-
+  const [loading, setLoading] = useState(false);
 
   const fetchWeatherDetails = async (state: string) => {
     try {
@@ -69,14 +70,13 @@ const AdminForestFirePredictor: React.FC = () => {
         temperature: response.data.temperature,
         humidity: response.data.humidity,
         precipitation: response.data.precipitation,
-        oxygen: response.data.ozone, // Added Ozone (O3)
-        windSpeed: response.data.windSpeed || 0, // Default to 0 if windSpeed is not available
+        oxygen: response.data.ozone,
+        windSpeed: response.data.windSpeed || 0,
       });
       setError(null);
     } catch (err) {
       setWeatherDetails(null);
       setError("Failed to fetch weather details. Please try again.");
-      console.error(err);
     }
   };
 
@@ -85,38 +85,48 @@ const AdminForestFirePredictor: React.FC = () => {
       setError("Weather details are required for prediction.");
       return;
     }
-  
-    try {
-      // Prepare the data to send as URLSearchParams (application/x-www-form-urlencoded)
-      const requestBody = new URLSearchParams();
-      requestBody.append("temperature", parseFloat(weatherDetails.temperature).toString());
-      requestBody.append("humidity", parseFloat(weatherDetails.humidity).toString());
-      requestBody.append("oxygen", parseFloat(weatherDetails.oxygen || "0").toString()); // Default to 0 if not available
-  
-      console.log("Sending request with body:", requestBody.toString());
 
-      // Send the request to the backend with application/x-www-form-urlencoded
-      const response = await axios.post("http://localhost:8000/predict", requestBody, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded", // Specify x-www-form-urlencoded content type
-        },
-      });
+    setLoading(true);
+    setTimeout(async () => {
+      try {
+        const requestBody = new URLSearchParams();
+        requestBody.append(
+          "temperature",
+          parseFloat(weatherDetails.temperature).toString()
+        );
+        requestBody.append(
+          "humidity",
+          parseFloat(weatherDetails.humidity).toString()
+        );
+        requestBody.append(
+          "oxygen",
+          parseFloat(weatherDetails.oxygen || "0").toString()
+        );
 
-      setPredictionResult(response.data.prediction);
-      setProbab(response.data.probability)
-      setSuccess("Forest fire prediction completed successfully! Check the results.");
-      setError(null);
-    } catch (err) {
-      setError("Failed to predict forest fire. Please try again.");
-      setSuccess(null);
-      console.error(err);
-    }
+        const response = await axios.post(
+          "http://localhost:8000/predict",
+          requestBody,
+          {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          }
+        );
+
+        setPredictionResult(response.data.prediction);
+        setProbab(response.data.probability);
+        setSuccess("Forest fire prediction completed successfully!");
+        setError(null);
+      } catch (err) {
+        setError("Failed to predict forest fire. Please try again.");
+        setSuccess(null);
+      } finally {
+        setLoading(false);
+      }
+    }, 3000); // Simulate a 3-second delay
   };
-  
 
   return (
     <Container size="md" py="xl">
-      <Card shadow="sm" padding="lg">
+      <Card shadow="sm" padding="lg" radius="md">
         <Text align="center" size="xl" weight={700} mb="md">
           Admin Forest Fire Predictor
         </Text>
@@ -134,21 +144,22 @@ const AdminForestFirePredictor: React.FC = () => {
         )}
 
         <Stack spacing="md">
-          {/* State/UT Selection */}
-          <Select
-            label="Select State/Union Territory"
-            placeholder="Choose a state/UT"
-            data={statesAndUTs.map((state) => ({ value: state, label: state }))}
-            value={selectedState}
-            onChange={(value) => {
-              setSelectedState(value);
-              if (value) fetchWeatherDetails(value);
-            }}
-          />
+        <Select
+  label="Select State/Union Territory"
+  placeholder="Choose a state/UT"
+  data={statesAndUTs.map((state) => ({ value: state, label: state }))}
+  value={selectedState}
+  onChange={(value) => {
+    setSelectedState(value);
+    if (value) fetchWeatherDetails(value);
+  }}
+  searchable
+  dropdownPosition="bottom" // Ensures dropdown always opens below the input
+  withinPortal // Renders the dropdown outside parent containers to avoid clipping
+/>
 
-          {/* Weather Details Display */}
           {weatherDetails && (
-            <Card shadow="sm" padding="md" withBorder>
+            <Card shadow="sm" padding="md" radius="md" withBorder>
               <Stack spacing="sm">
                 <TextInput
                   label="Temperature (°C)"
@@ -166,12 +177,12 @@ const AdminForestFirePredictor: React.FC = () => {
                   disabled
                 />
                 <TextInput
-                  label="Oxygen (µg/m³)" //
+                  label="Oxygen (µg/m³)"
                   value={weatherDetails.oxygen || "Unavailable"}
                   disabled
                 />
                 <TextInput
-                  label="Wind Speed (km/h)" //
+                  label="Wind Speed (km/h)"
                   value={weatherDetails.windSpeed || "Unavailable"}
                   disabled
                 />
@@ -179,16 +190,19 @@ const AdminForestFirePredictor: React.FC = () => {
             </Card>
           )}
 
-          {/* Predict Button */}
           <Group position="center">
-            <Button onClick={predictForestFire} disabled={!weatherDetails}>
-              Predict Forest Fire
+            <Button
+              onClick={predictForestFire}
+              disabled={!weatherDetails || loading}
+            >
+              {loading ? <Loader size="xs" /> : "Predict Forest Fire"}
             </Button>
           </Group>
+
           {predictionResult && (
-            <Card shadow="sm" padding="md" withBorder>
+            <Card shadow="sm" padding="md" radius="md" withBorder>
               <Text align="center" size="lg" weight={500}>
-                Prediction: {predictionResult } with probabilty { probab}
+                Prediction: {predictionResult} with probability {probab}
               </Text>
             </Card>
           )}
