@@ -291,14 +291,16 @@ const LandingNavbar = ({ compressed }: IProps) => {
               sx={{ height: "100%" }}
               className={classes.hiddenMobile}
             >
-              <Button
-                component={Link}
-                to="/crisis"
-                className={classes.link}
-                {...buttonProps}
-              >
-                Predict Disaster
-              </Button>
+              {role !== "ngo_hospital" && role !== "user" && (
+                <Button
+                  component={Link}
+                  to="/crisis"
+                  className={classes.link}
+                  {...buttonProps}
+                >
+                  Predict Disaster
+                </Button>
+              )}
               <Button
                 component={Link}
                 to="/disaster-preparedness"
